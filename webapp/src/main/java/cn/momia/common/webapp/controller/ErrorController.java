@@ -1,6 +1,6 @@
 package cn.momia.common.webapp.controller;
 
-import cn.momia.api.base.http.MomiaHttpResponse;
+import cn.momia.common.api.http.MomiaHttpResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
