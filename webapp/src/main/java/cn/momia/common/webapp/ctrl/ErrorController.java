@@ -1,4 +1,4 @@
-package cn.momia.common.webapp.controller;
+package cn.momia.common.webapp.ctrl;
 
 import cn.momia.common.api.http.MomiaHttpResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
