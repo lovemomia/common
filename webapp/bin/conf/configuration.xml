@@ -3,4 +3,9 @@
     <Logger>
         <Level>INFO</Level>
     </Logger>
+
+    <Limit>
+        <MaxPage>50</MaxPage>
+        <MaxPageSize>50</MaxPageSize>
+    </Limit>
 </Configuration>
