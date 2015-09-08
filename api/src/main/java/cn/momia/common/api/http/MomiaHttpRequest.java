@@ -48,15 +48,11 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
     }
 
     public static MomiaHttpRequest POST(String uri) {
-        return POST("anonymous", true, uri, null);
+        return POST(uri, (Map) null);
     }
 
     public static MomiaHttpRequest POST(String uri, Map<String, String> params) {
-        return POST("anonymous", true, uri, params);
-    }
-
-    public static MomiaHttpRequest POST(String name, boolean required, String uri, Map<String, String> params) {
-        return new MomiaHttpRequest(name, required, uri, params) {
+        return new MomiaHttpRequest("anonymous", true, uri, params) {
             @Override
             protected HttpRequestBase createHttpMethod(String uri, Map<String, String> params) {
                 try {
@@ -96,11 +92,7 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
     }
 
     public static MomiaHttpRequest PUT(String uri, Map<String, String> params) {
-        return PUT("anonymous", true, uri, params);
-    }
-
-    public static MomiaHttpRequest PUT(String name, boolean required, String uri, Map<String, String> params) {
-        return new MomiaHttpRequest(name, required, uri, params) {
+        return new MomiaHttpRequest("anonymous", true, uri, params) {
             @Override
             protected HttpRequestBase createHttpMethod(String uri, Map<String, String> params) {
                 try {
@@ -139,20 +131,8 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
         };
     }
 
-    public static MomiaHttpRequest DELETE(String uri) {
-        return DELETE("anonymous", true, uri, null);
-    }
-
     public static MomiaHttpRequest DELETE(String uri, Map<String, String> params) {
-        return DELETE("anonymous", true, uri, params);
-    }
-
-    public static MomiaHttpRequest DELETE(String name, boolean required, String uri) {
-        return DELETE(name, required, uri, null);
-    }
-
-    public static MomiaHttpRequest DELETE(String name, boolean required, String uri, Map<String, String> params) {
-        return new MomiaHttpRequest(name, required, uri, params) {
+        return new MomiaHttpRequest("anonymous", true, uri, params) {
             @Override
             protected HttpRequestBase createHttpMethod(String uri, Map<String, String> params) {
                 return new HttpDelete(new StringBuilder().append(uri).append("?").append(toUrlParams(params)).toString());
@@ -165,18 +145,6 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
 
     protected HttpEntity entity;
     protected HttpRequestBase httpRequestBase;
-
-    public MomiaHttpRequest(String uri) {
-        this("anonymous", true, uri, null);
-    }
-
-    public MomiaHttpRequest(String uri, Map<String, String> params) {
-        this("anonymous", true, uri, params);
-    }
-
-    public MomiaHttpRequest(String name, boolean required, String uri) {
-        this(name, required, uri, null);
-    }
 
     public MomiaHttpRequest(String name, boolean required, String uri, Map<String, String> params) {
         this.name = name;
