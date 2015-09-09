@@ -98,7 +98,7 @@ public class TimeUtil {
         return month / 12.0F;
     }
 
-    public static String getAgeDesc(Date birthday) {
+    public static String formatAge(Date birthday) {
         float age = getAge(birthday);
 
         if (age <= 0) return "未出生";
