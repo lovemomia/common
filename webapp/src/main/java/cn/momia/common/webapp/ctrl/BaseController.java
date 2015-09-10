@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
@@ -17,6 +21,17 @@ public abstract class BaseController {
         int maxPageSize = Configuration.getInt("Limit.MaxPageSize");
 
         return start < 0 || count <= 0 || start > maxPage * maxPageSize || count > maxPageSize;
+    }
+
+    protected Map<String, String> extractParams(HttpServletRequest request) {
+        Map<String, String> params = new HashMap<String, String>();
+        for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+            String[] values = entry.getValue();
+            if (values.length <= 0) continue;
+            params.put(entry.getKey(), entry.getValue()[0]);
+        }
+
+        return params;
     }
 
     @ExceptionHandler
