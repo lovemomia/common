@@ -11,7 +11,7 @@ public abstract class Reloadable {
     }
 
     protected synchronized void reload() {
-        if (isOutOfDate()) return;
+        if (!isOutOfDate()) return;
 
         try {
             doReload();
