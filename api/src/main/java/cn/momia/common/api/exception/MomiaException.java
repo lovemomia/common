@@ -1,6 +1,6 @@
 package cn.momia.common.api.exception;
 
-public class MomiaException extends RuntimeException {
+public abstract class MomiaException extends RuntimeException {
     public MomiaException() {}
 
     public MomiaException(String msg) {

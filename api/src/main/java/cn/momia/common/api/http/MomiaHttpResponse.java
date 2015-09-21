@@ -2,6 +2,7 @@ package cn.momia.common.api.http;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.Date;
 
@@ -21,7 +22,6 @@ public class MomiaHttpResponse {
 
     private static final String SUCCESS_MSG = "success";
     private static final String FAILED_MSG = "failed";
-
 
     public static final MomiaHttpResponse SUCCESS = new MomiaHttpResponse(SUCCESS_MSG);
     public static final MomiaHttpResponse FAILED = new MomiaHttpResponse(ErrorCode.FAILED, FAILED_MSG);
@@ -43,15 +43,6 @@ public class MomiaHttpResponse {
 
     public static MomiaHttpResponse FAILED(String errmsg) {
         return new MomiaHttpResponse(ErrorCode.FAILED, errmsg);
-    }
-
-    public static MomiaHttpResponse formJson(JSONObject jsonObject) {
-        MomiaHttpResponse responseMessage = new MomiaHttpResponse();
-        responseMessage.errno = jsonObject.getInteger("errno");
-        responseMessage.errmsg = jsonObject.getString("errmsg");
-        responseMessage.data = jsonObject.get("data");
-
-        return responseMessage;
     }
 
     private int errno = ErrorCode.FAILED;
@@ -103,11 +94,13 @@ public class MomiaHttpResponse {
         this.time = time;
     }
 
-    public boolean successful() {
+    @JSONField(serialize = false)
+    public boolean isSuccessful() {
         return errno == ErrorCode.SUCCESS;
     }
 
-    public boolean tokenExpired() {
+    @JSONField(serialize = false)
+    public boolean isTokenExpired() {
         return errno == ErrorCode.TOKEN_EXPIRED;
     }
 }

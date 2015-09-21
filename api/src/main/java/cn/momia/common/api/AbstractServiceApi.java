@@ -1,6 +1,6 @@
 package cn.momia.common.api;
 
-import cn.momia.common.api.exception.MomiaExpiredException;
+import cn.momia.common.api.exception.MomiaLoginException;
 import cn.momia.common.api.exception.MomiaFailedException;
 import cn.momia.common.api.http.MomiaHttpRequest;
 import cn.momia.common.api.http.MomiaHttpResponse;
@@ -29,14 +29,15 @@ public abstract class AbstractServiceApi implements ServiceApi {
     }
 
     protected Object executeRequest(MomiaHttpRequest request) {
-        HttpClient httpClient = createHttpClient();
         try {
+            HttpClient httpClient = createHttpClient();
+
             HttpResponse response = httpClient.execute(request);
-            if (!checkResponseStatus(response)) throw new RuntimeException("fail to execute request: " + request);;
+            if (!isSuccessfulResponse(response)) throw new MomiaFailedException("fail to execute request: " + request);;
 
             MomiaHttpResponse momiaHttpResponse = buildResponse(response);
-            if (momiaHttpResponse.tokenExpired()) throw new MomiaExpiredException();
-            if (!momiaHttpResponse.successful()) throw new MomiaFailedException(momiaHttpResponse.getErrmsg());
+            if (momiaHttpResponse.isTokenExpired()) throw new MomiaLoginException();
+            if (!momiaHttpResponse.isSuccessful()) throw new MomiaFailedException(momiaHttpResponse.getErrmsg());
 
             return momiaHttpResponse.getData();
         } catch (IOException e) {
@@ -49,7 +50,7 @@ public abstract class AbstractServiceApi implements ServiceApi {
         return HttpClients.createDefault();
     }
 
-    private boolean checkResponseStatus(HttpResponse response) {
+    private boolean isSuccessfulResponse(HttpResponse response) {
         return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
     }
 
