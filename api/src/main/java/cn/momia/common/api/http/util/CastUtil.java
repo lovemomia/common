@@ -1,5 +1,6 @@
 package cn.momia.common.api.http.util;
 
+import cn.momia.common.api.entity.PagedList;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -16,5 +17,14 @@ public class CastUtil {
         }
 
         return list;
+    }
+
+    public static <T> PagedList<T> toPagedList(JSONObject jsonObject, Class<T> clazz) {
+        PagedList<T> pagedList = new PagedList<T>();
+        pagedList.setTotalCount(jsonObject.getLong("totalCount"));
+        pagedList.setNextIndex(jsonObject.getInteger("nextIndex"));
+        pagedList.setList(toList(jsonObject.getJSONArray("list"), clazz));
+
+        return pagedList;
     }
 }
