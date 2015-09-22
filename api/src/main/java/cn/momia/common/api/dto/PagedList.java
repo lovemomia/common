@@ -1,9 +1,11 @@
-package cn.momia.common.api.entity;
+package cn.momia.common.api.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PagedList<T> {
+    public static final PagedList EMPTY = new PagedList(0, 0, 0);
+
     private long totalCount;
     private Integer nextIndex;
     private List<T> list = new ArrayList<T>();
@@ -30,5 +32,12 @@ public class PagedList<T> {
 
     public void setList(List<T> list) {
         this.list = list;
+    }
+
+    public PagedList() {}
+
+    public PagedList(long totalCount, int start, int count) {
+        this.totalCount = totalCount;
+        if (start + count < totalCount) this.nextIndex = start + count;
     }
 }
