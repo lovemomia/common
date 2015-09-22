@@ -1,4 +1,4 @@
-package cn.momia.common.webapp.ctrl.dto;
+package cn.momia.common.api.dto;
 
 import java.io.Serializable;
 

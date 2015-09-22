@@ -1,4 +1,4 @@
-package cn.momia.common.webapp.ctrl.dto;
+package cn.momia.common.api.dto;
 
 public class PagedListDto implements Dto {
     public static final PagedListDto EMPTY = new PagedListDto(0, 0, 0);
