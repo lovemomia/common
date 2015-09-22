@@ -1,4 +1,4 @@
-package cn.momia.common.api.http.util;
+package cn.momia.common.api.util;
 
 import cn.momia.common.api.dto.PagedList;
 import com.alibaba.fastjson.JSON;

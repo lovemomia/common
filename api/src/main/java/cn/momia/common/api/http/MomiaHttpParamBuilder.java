@@ -8,7 +8,6 @@ public class MomiaHttpParamBuilder {
 
     public MomiaHttpParamBuilder add(String key, Object value) {
         params.put(key, value);
-
         return this;
     }
 

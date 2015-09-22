@@ -308,7 +308,6 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
     @Override
     public boolean expectContinue() {
         final Header expect = getFirstHeader(HTTP.EXPECT_DIRECTIVE);
-
         return expect != null && HTTP.EXPECT_CONTINUE.equalsIgnoreCase(expect.getValue());
     }
 
