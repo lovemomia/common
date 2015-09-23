@@ -1,7 +1,6 @@
 package cn.momia.common.sign;
 
 public final class Base64 {
-
     static private final int     BASELENGTH           = 128;
     static private final int     LOOKUPLENGTH         = 64;
     static private final int     TWENTYFOURBITGROUP   = 24;
@@ -45,7 +44,6 @@ public final class Base64 {
         }
         lookUpBase64Alphabet[62] = (char) '+';
         lookUpBase64Alphabet[63] = (char) '/';
-
     }
 
     private static boolean isWhiteSpace(char octect) {
@@ -67,7 +65,6 @@ public final class Base64 {
      * @return Encoded Base64 array
      */
     public static String encode(byte[] binaryData) {
-
         if (binaryData == null) {
             return null;
         }
@@ -158,7 +155,6 @@ public final class Base64 {
      * @return Array containind decoded data.
      */
     public static byte[] decode(String encoded) {
-
         if (encoded == null) {
             return null;
         }
