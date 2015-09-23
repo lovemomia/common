@@ -5,12 +5,12 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="alipay" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
-        <property name="staticField" value="cn.momia.service.order.Payment.Type.ALIPAY" />
+        <property name="staticField" value="cn.momia.common.deal.gateway.PayType.ALIPAY" />
     </bean>
     <bean id="alipayGateway" class="cn.momia.common.deal.gateway.alipay.AlipayGateway" />
 
     <bean id="wechatpay" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
-        <property name="staticField" value="cn.momia.service.order.Payment.Type.WECHATPAY" />
+        <property name="staticField" value="cn.momia.common.deal.gateway.PayType.WECHATPAY" />
     </bean>
     <bean id="wechatpayGateway" class="cn.momia.common.deal.gateway.wechatpay.WechatpayGateway" />
 

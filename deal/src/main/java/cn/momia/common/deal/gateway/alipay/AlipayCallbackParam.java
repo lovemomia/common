@@ -1,11 +1,11 @@
 package cn.momia.common.deal.gateway.alipay;
 
 import cn.momia.common.api.exception.MomiaFailedException;
+import cn.momia.common.deal.gateway.PayType;
 import cn.momia.common.util.TimeUtil;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.deal.gateway.CallbackParam;
 import cn.momia.common.collection.MapWrapper;
-import cn.momia.service.product.order.Payment;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -71,7 +71,7 @@ public class AlipayCallbackParam extends MapWrapper implements CallbackParam {
 
     @Override
     public int getPayType() {
-        return Payment.Type.ALIPAY;
+        return PayType.ALIPAY;
     }
 
     @Override
