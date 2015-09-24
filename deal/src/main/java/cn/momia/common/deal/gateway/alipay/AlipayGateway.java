@@ -3,7 +3,7 @@ package cn.momia.common.deal.gateway.alipay;
 import cn.momia.common.deal.gateway.PaymentGateway;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.deal.gateway.PrepayResult;
-import cn.momia.common.deal.gateway.ClientType;
+import cn.momia.common.client.ClientType;
 import cn.momia.common.deal.gateway.PrepayParam;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,9 +12,9 @@ public class AlipayGateway implements PaymentGateway {
     public PrepayResult prepay(PrepayParam param) {
         PrepayResult result = new AlipayPrepayResult();
 
-        if (ClientType.isFromApp(param.getClientType())) {
+        if (ClientType.isApp(param.getClientType())) {
             result.add(AlipayPrepayResult.Field.SERVICE, Configuration.getString("Payment.Ali.AppService"));
-        } else if (ClientType.isFromWap(param.getClientType())) {
+        } else if (ClientType.isWap(param.getClientType())) {
             result.add(AlipayPrepayResult.Field.SERVICE, Configuration.getString("Payment.Ali.WapService"));
             result.add(AlipayPrepayResult.Field.RETURN_URL, param.getProductUrl());
         }

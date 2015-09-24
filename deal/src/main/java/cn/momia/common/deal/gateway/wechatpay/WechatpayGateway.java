@@ -1,7 +1,7 @@
 package cn.momia.common.deal.gateway.wechatpay;
 
 import cn.momia.common.api.exception.MomiaFailedException;
-import cn.momia.common.deal.gateway.ClientType;
+import cn.momia.common.client.ClientType;
 import cn.momia.common.deal.gateway.PaymentGateway;
 import cn.momia.common.util.XmlUtil;
 import cn.momia.common.webapp.config.Configuration;
@@ -162,7 +162,7 @@ public class WechatpayGateway implements PaymentGateway {
         if (successful) {
             if (!WechatpayUtil.validateSign(params, clientType)) throw new MomiaFailedException("fail to prepay, invalid sign");
 
-            if (ClientType.isFromApp(clientType)) {
+            if (ClientType.isApp(clientType)) {
                 result.add(WechatpayPrepayResult.App.Field.APPID, Configuration.getString("Payment.Wechat.AppAppId"));
                 result.add(WechatpayPrepayResult.App.Field.PARTNERID, Configuration.getString("Payment.Wechat.AppMchId"));
                 result.add(WechatpayPrepayResult.App.Field.PREPAYID, params.get(PREPAY_REQUEST_PREPAY_ID));
@@ -170,7 +170,7 @@ public class WechatpayGateway implements PaymentGateway {
                 result.add(WechatpayPrepayResult.App.Field.NONCE_STR, WechatpayUtil.createNoncestr(32));
                 result.add(WechatpayPrepayResult.App.Field.TIMESTAMP, String.valueOf(new Date().getTime()).substring(0, 10));
                 result.add(WechatpayPrepayResult.App.Field.SIGN, WechatpayUtil.sign(result.getAll(), clientType));
-            } else if (ClientType.isFromWap(clientType)) {
+            } else if (ClientType.isWap(clientType)) {
                 result.add(WechatpayPrepayResult.JsApi.Field.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
                 result.add(WechatpayPrepayResult.JsApi.Field.PACKAGE, "prepay_id=" + params.get(PREPAY_REQUEST_PREPAY_ID));
                 result.add(WechatpayPrepayResult.JsApi.Field.NONCE_STR, WechatpayUtil.createNoncestr(32));

@@ -3,7 +3,7 @@ package cn.momia.common.deal.gateway.wechatpay;
 import cn.momia.common.api.exception.MomiaFailedException;
 import cn.momia.common.deal.gateway.CallbackParam;
 import cn.momia.common.collection.MapWrapper;
-import cn.momia.common.deal.gateway.ClientType;
+import cn.momia.common.client.ClientType;
 import cn.momia.common.deal.gateway.PayType;
 
 import java.math.BigDecimal;
