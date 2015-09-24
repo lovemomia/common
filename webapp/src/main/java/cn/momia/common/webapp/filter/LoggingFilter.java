@@ -42,7 +42,7 @@ public class LoggingFilter implements Filter {
         Map<String, String> filteredMap = new HashMap<String, String>();
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
             String key = entry.getKey();
-            if ("password".equalsIgnoreCase(key)) filteredMap.put(key, "******");
+            if (key.toLowerCase().contains("password")) filteredMap.put(key, "******");
             else filteredMap.put(key, entry.getValue()[0]);
         }
 

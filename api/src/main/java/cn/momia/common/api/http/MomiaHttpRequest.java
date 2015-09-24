@@ -323,11 +323,6 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
 
     @Override
     public String toString() {
-        return "MomiaHttpRequest{" +
-                "name='" + name + '\'' +
-                ", required=" + required +
-                ", entity=" + entity +
-                ", httpRequestBase=" + httpRequestBase +
-                '}';
+        return "MomiaHttpRequest {name=" + name + ", required=" + required + ", entity=" + entity + ", httpRequestBase=" + httpRequestBase + "}";
     }
 }
