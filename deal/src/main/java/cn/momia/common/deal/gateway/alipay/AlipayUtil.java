@@ -37,7 +37,7 @@ public class AlipayUtil {
         try {
             return URLEncoder.encode(RSA.sign(StringUtils.join(kvs, "&"), Configuration.getString("Payment.Ali.PrivateKey"), "utf-8"), "utf-8");
         } catch (UnsupportedEncodingException e) {
-            throw new MomiaFailedException("unsupported encoding", e);
+            throw new MomiaFailedException("签名错误");
         }
     }
 

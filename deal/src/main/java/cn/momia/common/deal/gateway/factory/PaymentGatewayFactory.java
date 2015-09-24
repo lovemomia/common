@@ -14,7 +14,7 @@ public class PaymentGatewayFactory {
 
     public static PaymentGateway create(int payType) {
         PaymentGateway paymentGateway = prototypes.get(payType);
-        if (paymentGateway == null) throw new MomiaFailedException("invalid pay type: " + payType);
+        if (paymentGateway == null) throw new MomiaFailedException("无效的支付类型: " + payType);
 
         return paymentGateway;
     }
