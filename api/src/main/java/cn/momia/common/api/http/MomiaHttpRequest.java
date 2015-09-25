@@ -9,6 +9,7 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.RequestLine;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -55,18 +56,10 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
         return new MomiaHttpRequest("anonymous", true, uri, params) {
             @Override
             protected HttpRequestBase createHttpMethod(String uri, Map<String, String> params) {
-                try {
-                    HttpPost httpPost = new HttpPost(uri);
-                    if (params != null && !params.isEmpty()) {
-                        HttpEntity entity = new UrlEncodedFormEntity(toNameValuePairs(params), "UTF-8");
-                        httpPost.setEntity(entity);
-                        setEntity(entity);
-                    }
+                HttpPost httpPost = new HttpPost(uri);
+                parseEntity(httpPost, params);
 
-                    return httpPost;
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                }
+                return httpPost;
             }
         };
     }
@@ -79,12 +72,8 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
         return new MomiaHttpRequest("anonymous", true, uri, null) {
             @Override
             protected HttpRequestBase createHttpMethod(String uri, Map<String, String> params) {
-                HttpEntity entity = toEntity(content, contentType);
-
                 HttpPost httpPost = new HttpPost(uri);
-                httpPost.addHeader(HTTP.CONTENT_TYPE, contentType);
-                httpPost.setEntity(entity);
-                setEntity(entity);
+                parseEntity(httpPost, content, contentType);
 
                 return httpPost;
             }
@@ -95,18 +84,10 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
         return new MomiaHttpRequest("anonymous", true, uri, params) {
             @Override
             protected HttpRequestBase createHttpMethod(String uri, Map<String, String> params) {
-                try {
-                    HttpPut httpPut = new HttpPut(uri);
-                    if (params != null && !params.isEmpty()) {
-                        HttpEntity entity = new UrlEncodedFormEntity(toNameValuePairs(params), "UTF-8");
-                        httpPut.setEntity(entity);
-                        setEntity(entity);
-                    }
+                HttpPut httpPut = new HttpPut(uri);
+                parseEntity(httpPut, params);
 
-                    return httpPut;
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
-                }
+                return httpPut;
             }
         };
     }
@@ -119,12 +100,8 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
         return new MomiaHttpRequest("anonymous", true, uri, null) {
             @Override
             protected HttpRequestBase createHttpMethod(String uri, Map<String, String> params) {
-                HttpEntity entity = toEntity(content, contentType);
-
                 HttpPut httpPut = new HttpPut(uri);
-                httpPut.addHeader(HTTP.CONTENT_TYPE, contentType);
-                httpPut.setEntity(entity);
-                setEntity(entity);
+                parseEntity(httpPut, content, contentType);
 
                 return httpPut;
             }
@@ -157,12 +134,12 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
 
     protected String toUrlParams(Map<String, String> params) {
         StringBuilder builder = new StringBuilder();
-        if (params != null && params.size() > 0) {
+        if (params != null && !params.isEmpty()) {
             int i = 0;
             int paramCount = params.size();
             for (Map.Entry<String, String> entry : params.entrySet()) {
-                i++;
                 builder.append(entry.getKey()).append(("=")).append(entry.getValue());
+                i++;
                 if (i < paramCount) builder.append("&");
             }
         }
@@ -179,12 +156,26 @@ public abstract class MomiaHttpRequest implements HttpUriRequest, HttpEntityEncl
         return nameValuePairs;
     }
 
-    protected static StringEntity toEntity(String content, String contentType) {
+    protected void parseEntity(HttpEntityEnclosingRequestBase httpMethod, Map<String, String> params) {
+        if (params == null && params.isEmpty()) return;
+
+        try {
+            HttpEntity entity = new UrlEncodedFormEntity(toNameValuePairs(params), "UTF-8");
+            httpMethod.setEntity(entity);
+            setEntity(entity);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void parseEntity(HttpEntityEnclosingRequestBase httpMethod, String content, String contentType) {
         StringEntity entity = new StringEntity(content, "UTF-8");
         entity.setContentType(contentType);
         entity.setContentEncoding("UTF-8");
 
-        return entity;
+        httpMethod.addHeader(HTTP.CONTENT_TYPE, contentType);
+        httpMethod.setEntity(entity);
+        setEntity(entity);
     }
 
     public String getName() {
