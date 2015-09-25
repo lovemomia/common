@@ -17,19 +17,20 @@ public class LoggerConfigurer {
     }
 
     public void init() {
-        if (!reload()) throw new RuntimeException("fail to init logger configurer");
+        reload();
     }
 
-    public boolean reload() {
+    public void reload() {
         String loggerLevel = xmlConf.getString("Logger.Level");
-        if (StringUtils.isBlank(loggerLevel)) return false;
+        if (StringUtils.isBlank(loggerLevel)) {
+            LOGGER.warn("Logger.Level config is empty");
+            return;
+        }
 
         LOGGER.info("set root logger level to: {}", loggerLevel);
 
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         ch.qos.logback.classic.Logger logger = context.getLogger(Logger.ROOT_LOGGER_NAME);
-        logger.setLevel(Level.toLevel(loggerLevel));
-
-        return true;
+        logger.setLevel(Level.toLevel(loggerLevel, Level.INFO));
     }
 }
