@@ -33,7 +33,7 @@ public abstract class AbstractServiceApi implements ServiceApi {
             HttpClient httpClient = createHttpClient();
 
             HttpResponse response = httpClient.execute(request);
-            if (!isSuccessfulResponse(response)) throw new RuntimeException("fail to execute request: " + request);;
+            if (!isSuccessful(response)) throw new RuntimeException("fail to execute request: " + request);;
 
             MomiaHttpResponse momiaHttpResponse = buildResponse(response);
             if (momiaHttpResponse.isTokenExpired()) throw new MomiaLoginException();
@@ -50,7 +50,7 @@ public abstract class AbstractServiceApi implements ServiceApi {
         return HttpClients.createDefault();
     }
 
-    private boolean isSuccessfulResponse(HttpResponse response) {
+    private boolean isSuccessful(HttpResponse response) {
         return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
     }
 
