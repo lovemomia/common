@@ -11,7 +11,6 @@ import java.util.List;
 
 public class TimeUtil {
     private static final DateFormat YEAR_DATE_FORMATTER = new SimpleDateFormat("yyyyMMdd");
-    private static final DateFormat MONTH_DATE_FORMATTER = new SimpleDateFormat("M月d日");
     private static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
     private static final String[] AM_PM = { "上午", "下午" };
 
@@ -33,16 +32,6 @@ public class TimeUtil {
         }
     }
 
-    public static String formatMonthDateWithWeekDay(Date time) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(MONTH_DATE_FORMATTER.format(time))
-                .append("(")
-                .append(TimeUtil.getWeekDay(time))
-                .append(")");
-
-        return builder.toString();
-    }
-
     public static String getWeekDay(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -59,27 +48,6 @@ public class TimeUtil {
         calendar.setTime(date);
 
         return AM_PM[calendar.get(Calendar.AM_PM)];
-    }
-
-    public static String formatYearMonth(int month) {
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
-
-        if (month < currentMonth) return String.format("%d-%02d", currentYear + 1, month);
-        return String.format("%d-%02d", currentYear, month);
-    }
-
-    public static String formatNextYearMonth(int month) {
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
-
-        int nextMonth = month + 1;
-        nextMonth = nextMonth > 12 ? nextMonth - 12 : nextMonth;
-
-        if (month < currentMonth || nextMonth < month) return String.format("%d-%02d", currentYear + 1, nextMonth);
-        return String.format("%d-%02d", currentYear, nextMonth);
     }
 
     public static float getAge(Date birthday) {
@@ -111,10 +79,10 @@ public class TimeUtil {
     }
 
     public static boolean isAdult(Date birthday) {
-        return getAge(birthday) > 15;
+        return getAge(birthday) >= 18;
     }
 
     public static boolean isChild(Date birthday) {
-        return getAge(birthday) < 15;
+        return getAge(birthday) < 18;
     }
 }
