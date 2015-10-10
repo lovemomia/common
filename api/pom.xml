@@ -6,7 +6,7 @@
 
     <groupId>cn.momia</groupId>
     <artifactId>duola-common-api</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>Momia Common API</name>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>cn.momia</groupId>
             <artifactId>duola-common-util</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
 
         <!-- Test -->
