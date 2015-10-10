@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 public class TimeUtil {
-    private static final DateFormat YEAR_DATE_FORMATTER = new SimpleDateFormat("yyyyMMdd");
+    public static final DateFormat STANDARD_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private static final DateFormat YEAR_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     private static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
     private static final String[] AM_PM = { "上午", "下午" };
 
@@ -40,7 +42,7 @@ public class TimeUtil {
     }
 
     public static boolean isSameDay(Date day1, Date day2) {
-        return YEAR_DATE_FORMATTER.format(day1).equals(YEAR_DATE_FORMATTER.format(day2));
+        return YEAR_DATE_FORMAT.format(day1).equals(YEAR_DATE_FORMAT.format(day2));
     }
 
     public static String getAmPm(Date date) {
