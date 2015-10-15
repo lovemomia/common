@@ -34,9 +34,24 @@ public abstract class DbAccessService extends Reloadable {
         }
     }
 
+    public static class ObjectResultSetExtractor<T> implements ResultSetExtractor<T> {
+        private Function<ResultSet, T> func;
+        private T defaultValue;
+
+        public ObjectResultSetExtractor(Function<ResultSet, T> func, T defaultValue) {
+            this.func = func;
+            this.defaultValue = defaultValue;
+        }
+
+        @Override
+        public T extractData(ResultSet rs) throws SQLException, DataAccessException {
+            return rs.next() ? func.apply(rs) : defaultValue;
+        }
+    }
+
     public static class ListResultSetExtractor<T extends Entity> implements RowCallbackHandler {
         private List<T> list;
-        Function<ResultSet, T> func;
+        private Function<ResultSet, T> func;
 
         public ListResultSetExtractor(List<T> list, Function<ResultSet, T> func) {
             this.list = list;
