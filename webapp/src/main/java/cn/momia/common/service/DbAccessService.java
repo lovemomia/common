@@ -34,6 +34,13 @@ public abstract class DbAccessService extends Reloadable {
         }
     }
 
+    public static class LongResultSetExtractor implements ResultSetExtractor<Long> {
+        @Override
+        public Long extractData(ResultSet rs) throws SQLException, DataAccessException {
+            return rs.next() ? rs.getLong(1) : 0;
+        }
+    }
+
     public static class ObjectResultSetExtractor<T> implements ResultSetExtractor<T> {
         private Function<ResultSet, T> func;
         private T defaultValue;
