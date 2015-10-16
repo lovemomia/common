@@ -12,8 +12,7 @@ public class CastUtil {
     public static <T> List<T> toList(JSONArray jsonArray, Class<T> clazz) {
         List<T> list = new ArrayList<T>();
         for (int i = 0; i < jsonArray.size(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            list.add(JSON.toJavaObject(jsonObject, clazz));
+            list.add(jsonArray.getObject(i, clazz));
         }
 
         return list;
