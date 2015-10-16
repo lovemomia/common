@@ -10,7 +10,7 @@
     <bean id="alipayGateway" class="cn.momia.common.deal.gateway.alipay.AlipayGateway" />
 
     <bean id="wechatpay" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
-        <property name="staticField" value="cn.momia.common.deal.gateway.PayType.WECHATPAY" />
+        <property name="staticField" value="cn.momia.common.deal.gateway.PayType.WEIXIN" />
     </bean>
     <bean id="wechatpayGateway" class="cn.momia.common.deal.gateway.wechatpay.WechatpayGateway" />
 

@@ -55,9 +55,7 @@ public class AlipayCallbackParam extends MapWrapper implements CallbackParam {
         HttpClient httpClient = HttpClients.createDefault();
         HttpGet request = new HttpGet(verifyUrl);
         HttpResponse response = httpClient.execute(request);
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new MomiaFailedException("fail to execute request: " + request);
-        }
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaFailedException("fail to execute request: " + request);
 
         String entity = EntityUtils.toString(response.getEntity());
 

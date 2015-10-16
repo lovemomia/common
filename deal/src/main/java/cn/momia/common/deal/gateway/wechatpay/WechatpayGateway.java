@@ -65,9 +65,7 @@ public class WechatpayGateway implements PaymentGateway {
             HttpClient httpClient = HttpClients.createDefault();
             HttpPost request = createRequest(param);
             HttpResponse response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new MomiaFailedException("fail to execute request: " + request);
-            }
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaFailedException("fail to execute request: " + request);
 
             String entity = EntityUtils.toString(response.getEntity(), "UTF-8");
             processResponseEntity(result, entity, param.getClientType());
@@ -136,9 +134,7 @@ public class WechatpayGateway implements PaymentGateway {
                     .append("grant_type=authorization_code");
             HttpGet request = new HttpGet(urlBuilder.toString());
             HttpResponse response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new MomiaFailedException("fail to execute request: " + request);
-            }
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaFailedException("fail to execute request: " + request);
 
             String entity = EntityUtils.toString(response.getEntity());
             JSONObject resultJson = JSON.parseObject(entity);

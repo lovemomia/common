@@ -1,6 +1,6 @@
 package cn.momia.common.webapp.filter;
 
-import org.apache.commons.lang3.StringUtils;
+import cn.momia.common.webapp.util.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,7 @@ public class LoggingFilter implements Filter {
                 httpRequest.getContentType(),
                 httpRequest.getHeader("user-agent"),
                 filterParams(httpRequest.getParameterMap()),
-                getRemoteIp(httpRequest)
+                RequestUtil.getRemoteIp(httpRequest)
         });
     }
 
@@ -47,20 +47,6 @@ public class LoggingFilter implements Filter {
         }
 
         return filteredMap;
-    }
-
-    private String getRemoteIp(HttpServletRequest request) {
-        String ip = request.getHeader("X-Real-IP");
-        if (isInvalidIp(ip)) ip = request.getHeader("X-Forwarded-For");
-        if (isInvalidIp(ip)) ip = request.getHeader("Proxy-Client-IP");
-        if (isInvalidIp(ip)) ip = request.getHeader("WL-Proxy-Client-IP");
-        if (isInvalidIp(ip)) ip = request.getRemoteAddr();
-
-        return ip;
-    }
-
-    private boolean isInvalidIp(String ip) {
-        return StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip);
     }
 
     @Override
