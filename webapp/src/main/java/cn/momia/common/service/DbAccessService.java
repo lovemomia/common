@@ -2,6 +2,8 @@ package cn.momia.common.service;
 
 import cn.momia.common.reload.Reloadable;
 import com.google.common.base.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class DbAccessService extends Reloadable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DbAccessService.class);
+
     private Map<String, Map<String, Method>> classSetterMethods = new HashMap<String, Map<String, Method>>();
 
     protected JdbcTemplate jdbcTemplate;
@@ -116,10 +120,10 @@ public abstract class DbAccessService extends Reloadable {
     }
 
     public <T> List<T> queryList(String sql, Object[] args, Class<T> clazz) {
-        try {
-            List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, args);
-            List<T> result = new ArrayList<T>();
-            for (Map<String, Object> row : list) {
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, args);
+        List<T> result = new ArrayList<T>();
+        for (Map<String, Object> row : list) {
+            try {
                 T t = clazz.newInstance();
                 Map<String, Method> methods = getSetterMethods(clazz);
                 for (Map.Entry<String, Method> entry : methods.entrySet()) {
@@ -130,12 +134,12 @@ public abstract class DbAccessService extends Reloadable {
                 }
 
                 result.add(t);
+            } catch (Exception e) {
+                LOGGER.error("invalid row value: {}", row, e);
             }
-
-            return result;
-        } catch (Exception e) {
-            return new ArrayList<T>();
         }
+
+        return result;
     }
 
     private <T> Map<String, Method> getSetterMethods(Class<T> clazz) {
