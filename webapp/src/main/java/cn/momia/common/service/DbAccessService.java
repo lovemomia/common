@@ -103,6 +103,14 @@ public abstract class DbAccessService extends Reloadable {
         return jdbcTemplate.queryForList(sql, args, Long.class);
     }
 
+    public <T> T queryObject(String sql, Object[] args, Class<T> clazz, T defaultValue) {
+        try {
+            return jdbcTemplate.queryForObject(sql, args, clazz);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
     public <T> List<T> queryList(String sql, Class<T> clazz) {
         try {
             List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
