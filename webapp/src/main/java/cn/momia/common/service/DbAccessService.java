@@ -8,11 +8,17 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class DbAccessService extends Reloadable {
+    private Map<String, Map<String, Method>> classSetterMethods = new HashMap<String, Map<String, Method>>();
+
     protected JdbcTemplate jdbcTemplate;
     protected TransactionTemplate transactionTemplate;
 
@@ -26,13 +32,6 @@ public abstract class DbAccessService extends Reloadable {
 
     @Override
     protected void doReload() {}
-
-    public static class LongResultSetExtractor implements ResultSetExtractor<Long> {
-        @Override
-        public Long extractData(ResultSet rs) throws SQLException, DataAccessException {
-            return rs.next() ? rs.getLong(1) : 0;
-        }
-    }
 
     public static class ObjectResultSetExtractor<T> implements ResultSetExtractor<T> {
         private Function<ResultSet, T> func;
@@ -76,5 +75,75 @@ public abstract class DbAccessService extends Reloadable {
         public void processRow(ResultSet rs) throws SQLException {
             list.add(rs.getLong(1));
         }
+    }
+
+    public int queryInt(String sql, Object[] args) {
+        Number number = jdbcTemplate.queryForObject(sql, args, Integer.class);
+        return (number != null ? number.intValue() : 0);
+    }
+
+    public List<Integer> queryIntList(String sql) {
+        return jdbcTemplate.queryForList(sql, Integer.class);
+    }
+
+    public List<Integer> queryIntList(String sql, Object[] args) {
+        return jdbcTemplate.queryForList(sql, args, Integer.class);
+    }
+
+    public long queryLong(String sql, Object[] args) {
+        Number number = jdbcTemplate.queryForObject(sql, args, Integer.class);
+        return (number != null ? number.intValue() : 0);
+    }
+
+    public List<Long> queryLongList(String sql) {
+        return jdbcTemplate.queryForList(sql, Long.class);
+    }
+
+    public List<Long> queryLongList(String sql, Object[] args) {
+        return jdbcTemplate.queryForList(sql, args, Long.class);
+    }
+
+    public <T> List<T> queryList(String sql, Class<T> clazz) {
+        try {
+            List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+            List<T> result = new ArrayList<T>();
+            for (Map<String, Object> row : list) {
+                T t = clazz.newInstance();
+                Map<String, Method> methods = getSetterMethods(clazz);
+                for (Map.Entry<String, Method> entry : methods.entrySet()) {
+                    String fieldName = entry.getKey();
+                    Method method = entry.getValue();
+                    Object fieldValue = row.get(fieldName);
+                    if (fieldValue != null) method.invoke(t, fieldValue);
+                }
+
+                result.add(t);
+            }
+
+            return result;
+        } catch (Exception e) {
+            return new ArrayList<T>();
+        }
+    }
+
+    private <T> Map<String, Method> getSetterMethods(Class<T> clazz) {
+        Map<String, Method> methods = classSetterMethods.get(clazz.getName());
+        if (methods == null) {
+            synchronized (this) {
+                methods = classSetterMethods.get(clazz.getName());
+                if (methods == null) {
+                    methods = new HashMap<String, Method>();
+                    Method[] allMethods = clazz.getMethods();
+                    for (Method method : allMethods) {
+                        String methodName = method.getName();
+                        if (methodName.length() > 3 && methodName.startsWith("set") && method.getParameterCount() == 1) methods.put(methodName.substring(3), method);
+                    }
+
+                    classSetterMethods.put(clazz.getName(), methods);
+                }
+            }
+        }
+
+        return methods;
     }
 }
