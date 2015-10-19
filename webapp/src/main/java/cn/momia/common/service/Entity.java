@@ -1,5 +1,7 @@
 package cn.momia.common.service;
 
-public interface Entity {
+import java.io.Serializable;
+
+public interface Entity extends Serializable {
     boolean exists();
 }
