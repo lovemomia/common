@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PagedList<T> {
-    public static final PagedList EMPTY = new PagedList(0, 0, 0);
-
     private long totalCount;
     private Integer nextIndex;
     private List<T> list = new ArrayList<T>();

@@ -2,13 +2,14 @@ package cn.momia.common.api;
 
 import cn.momia.common.api.exception.MomiaLoginException;
 import cn.momia.common.api.exception.MomiaFailedException;
-import cn.momia.common.api.http.MomiaHttpRequest;
 import cn.momia.common.api.http.MomiaHttpResponse;
+import cn.momia.common.api.util.CastUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
@@ -30,7 +31,7 @@ public abstract class ServiceApi {
         return urlBuilder.toString();
     }
 
-    protected Object executeRequest(MomiaHttpRequest request) {
+    protected Object executeRequest(HttpUriRequest request) {
         try {
             HttpClient httpClient = createHttpClient();
 
@@ -60,6 +61,6 @@ public abstract class ServiceApi {
         String entity = EntityUtils.toString(response.getEntity());
         JSONObject responseJson = JSON.parseObject(entity);
 
-        return JSON.toJavaObject(responseJson, MomiaHttpResponse.class);
+        return CastUtil.toObject(responseJson, MomiaHttpResponse.class);
     }
 }

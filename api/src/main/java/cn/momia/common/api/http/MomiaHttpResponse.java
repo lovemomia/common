@@ -1,7 +1,5 @@
 package cn.momia.common.api.http;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.Date;
@@ -33,9 +31,6 @@ public class MomiaHttpResponse {
     public static final MomiaHttpResponse NOT_FOUND = new MomiaHttpResponse(ErrorCode.NOT_FOUND, "页面不存在");
     public static final MomiaHttpResponse METHOD_NOT_ALLOWED = new MomiaHttpResponse(ErrorCode.METHOD_NOT_ALLOWED, "无效的请求方法");
     public static final MomiaHttpResponse INTERNAL_SERVER_ERROR = new MomiaHttpResponse(ErrorCode.INTERNAL_SERVER_ERROR, "服务器内部错误");
-
-    public static final MomiaHttpResponse EMPTY_MAP = new MomiaHttpResponse(new JSONObject());
-    public static final MomiaHttpResponse EMPTY_ARRAY = new MomiaHttpResponse(new JSONArray());
 
     public static MomiaHttpResponse SUCCESS(Object data) {
         return new MomiaHttpResponse(data);

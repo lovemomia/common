@@ -27,13 +27,6 @@ public abstract class DbAccessService extends Reloadable {
     @Override
     protected void doReload() {}
 
-    public static class CountResultSetExtractor implements ResultSetExtractor<Long> {
-        @Override
-        public Long extractData(ResultSet rs) throws SQLException, DataAccessException {
-            return rs.next() ? rs.getLong(1) : 0;
-        }
-    }
-
     public static class LongResultSetExtractor implements ResultSetExtractor<Long> {
         @Override
         public Long extractData(ResultSet rs) throws SQLException, DataAccessException {
