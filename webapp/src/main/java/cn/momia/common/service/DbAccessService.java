@@ -120,9 +120,9 @@ public abstract class DbAccessService extends Reloadable {
     }
 
     public <T> List<T> queryList(String sql, Object[] args, Class<T> clazz) {
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, args);
-        List<T> result = new ArrayList<T>();
-        for (Map<String, Object> row : list) {
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, args);
+        List<T> list = new ArrayList<T>();
+        for (Map<String, Object> row : rows) {
             try {
                 T t = clazz.newInstance();
                 Map<String, Method> methods = getSetterMethods(clazz);
@@ -133,13 +133,13 @@ public abstract class DbAccessService extends Reloadable {
                     if (fieldValue != null) method.invoke(t, fieldValue);
                 }
 
-                result.add(t);
+                list.add(t);
             } catch (Exception e) {
                 LOGGER.error("invalid row value: {}", row, e);
             }
         }
 
-        return result;
+        return list;
     }
 
     private <T> Map<String, Method> getSetterMethods(Class<T> clazz) {
