@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,7 @@ import java.util.Map;
 public abstract class DbAccessService extends Reloadable {
     private static final Logger LOGGER = LoggerFactory.getLogger(DbAccessService.class);
 
-    private Map<String, Map<String, Method>> classSetterMethods = new HashMap<String, Map<String, Method>>();
+    private static Map<String, Map<String, Method>> classSetterMethods = new HashMap<String, Map<String, Method>>();
 
     protected JdbcTemplate jdbcTemplate;
     protected TransactionTemplate transactionTemplate;
@@ -61,12 +63,42 @@ public abstract class DbAccessService extends Reloadable {
         return jdbcTemplate.queryForList(sql, args, String.class);
     }
 
-    public <T> T queryObject(String sql, Object[] args, Class<T> clazz, T defaultValue) {
+    public String queryString(String sql, Object[] args, String defaultValue) {
         try {
-            return jdbcTemplate.queryForObject(sql, args, clazz);
+            return jdbcTemplate.queryForObject(sql, args, String.class);
         } catch (Exception e) {
             return defaultValue;
         }
+    }
+
+    public Date queryDate(String sql, Object[] args, Date defaultValue) {
+        try {
+            return jdbcTemplate.queryForObject(sql, args, Date.class);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    public <T> T queryObject(String sql, Object[] args, Class<T> clazz, T defaultValue) {
+        try {
+            Map<String, Object> row = jdbcTemplate.queryForMap(sql, args);
+            return buildObject(row, clazz);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    private <T> T buildObject(Map<String, Object> row, Class<T> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        T t = clazz.newInstance();
+        Map<String, Method> methods = getSetterMethods(clazz);
+        for (Map.Entry<String, Method> entry : methods.entrySet()) {
+            String fieldName = entry.getKey();
+            Method method = entry.getValue();
+            Object fieldValue = row.get(fieldName);
+            if (fieldValue != null) method.invoke(t, fieldValue);
+        }
+
+        return t;
     }
 
     public <T> List<T> queryList(String sql, Class<T> clazz) {
@@ -78,16 +110,7 @@ public abstract class DbAccessService extends Reloadable {
         List<T> list = new ArrayList<T>();
         for (Map<String, Object> row : rows) {
             try {
-                T t = clazz.newInstance();
-                Map<String, Method> methods = getSetterMethods(clazz);
-                for (Map.Entry<String, Method> entry : methods.entrySet()) {
-                    String fieldName = entry.getKey();
-                    Method method = entry.getValue();
-                    Object fieldValue = row.get(fieldName);
-                    if (fieldValue != null) method.invoke(t, fieldValue);
-                }
-
-                list.add(t);
+                list.add(buildObject(row, clazz));
             } catch (Exception e) {
                 LOGGER.error("invalid row value: {}", row, e);
             }
