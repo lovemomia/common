@@ -102,7 +102,7 @@ public abstract class DbAccessService extends Reloadable {
                     Method[] allMethods = clazz.getMethods();
                     for (Method method : allMethods) {
                         String methodName = method.getName();
-                        if (methodName.length() > 3 && methodName.startsWith("set") && method.getParameterCount() == 1) methods.put(methodName.substring(3), method);
+                        if (methodName.length() > 3 && methodName.startsWith("set") && method.getParameterTypes().length == 1) methods.put(methodName.substring(3), method);
                     }
 
                     classSetterMethods.put(clazz.getName(), methods);
