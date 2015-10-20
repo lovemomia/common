@@ -57,6 +57,10 @@ public abstract class DbAccessService extends Reloadable {
         return jdbcTemplate.queryForList(sql, args, Long.class);
     }
 
+    public List<String> queryStringList(String sql, Object[] args) {
+        return jdbcTemplate.queryForList(sql, args, String.class);
+    }
+
     public <T> T queryObject(String sql, Object[] args, Class<T> clazz, T defaultValue) {
         try {
             return jdbcTemplate.queryForObject(sql, args, clazz);
