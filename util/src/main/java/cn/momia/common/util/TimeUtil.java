@@ -10,7 +10,14 @@ import java.util.Date;
 import java.util.List;
 
 public class TimeUtil {
+    public static class TimeUnit {
+        public static final int MONTH = 1;
+        public static final int QUARTER = 2;
+        public static final int YEAR = 3;
+    }
+
     public static final DateFormat STANDARD_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy年MM月dd");
 
     private static final DateFormat YEAR_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     private static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
@@ -88,5 +95,25 @@ public class TimeUtil {
 
     public static boolean isChild(Date birthday) {
         return getAge(birthday) < 18;
+    }
+
+    public static Date add(Date startTime, int time, int timeUnit) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startTime);
+
+        switch (timeUnit) {
+            case TimeUnit.MONTH:
+                calendar.add(Calendar.MONTH, time);
+                break;
+            case TimeUnit.QUARTER:
+                calendar.add(Calendar.MONTH, time * 3);
+                break;
+            case TimeUnit.YEAR:
+                calendar.add(Calendar.YEAR, time);
+                break;
+            default: break;
+        }
+
+        return calendar.getTime();
     }
 }
