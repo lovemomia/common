@@ -141,6 +141,6 @@ public abstract class DbAccessService extends Reloadable {
     }
 
     protected boolean update(String sql, Object[] args) {
-        return jdbcTemplate.update(sql, args) == 1;
+        return jdbcTemplate.update(sql, args) >= 1;
     }
 }
