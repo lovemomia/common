@@ -13,6 +13,8 @@ public class PrepayParam extends MapWrapper {
     private String productUrl;
     private BigDecimal totalFee;
 
+    private String paymentResultUrl;
+
     public int getClientType() {
         return clientType;
     }
@@ -59,5 +61,13 @@ public class PrepayParam extends MapWrapper {
 
     public void setTotalFee(BigDecimal totalFee) {
         this.totalFee = totalFee;
+    }
+
+    public String getPaymentResultUrl() {
+        return paymentResultUrl;
+    }
+
+    public void setPaymentResultUrl(String paymentResultUrl) {
+        this.paymentResultUrl = paymentResultUrl;
     }
 }
