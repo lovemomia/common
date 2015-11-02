@@ -54,7 +54,7 @@ public class MomiaHttpRequestBuilder {
     }
 
     private static void parseEntity(HttpEntityEnclosingRequestBase httpMethod, Map<String, String> params) {
-        if (params == null && params.isEmpty()) return;
+        if (params == null || params.isEmpty()) return;
 
         try {
             HttpEntity entity = new UrlEncodedFormEntity(toNameValuePairs(params), "UTF-8");
