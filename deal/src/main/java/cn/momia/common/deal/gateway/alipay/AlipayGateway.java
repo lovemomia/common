@@ -16,7 +16,7 @@ public class AlipayGateway implements PaymentGateway {
             result.add(AlipayPrepayResult.Field.SERVICE, Configuration.getString("Payment.Ali.AppService"));
         } else if (ClientType.isWap(param.getClientType())) {
             result.add(AlipayPrepayResult.Field.SERVICE, Configuration.getString("Payment.Ali.WapService"));
-            result.add(AlipayPrepayResult.Field.RETURN_URL, param.getProductUrl());
+            result.add(AlipayPrepayResult.Field.RETURN_URL, param.getPaymentResultUrl());
         }
 
         result.add(AlipayPrepayResult.Field.PARTNER, Configuration.getString("Payment.Ali.Partner"));

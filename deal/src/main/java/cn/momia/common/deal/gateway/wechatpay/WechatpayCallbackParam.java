@@ -68,9 +68,9 @@ public class WechatpayCallbackParam extends MapWrapper implements CallbackParam 
     @Override
     public int getPayType() {
         String tradeType = get(Field.TRADE_TYPE);
-        if ("APP".equalsIgnoreCase(tradeType)) return PayType.WECHATPAY_APP;
-        else if ("JSAPI".equalsIgnoreCase(tradeType)) return PayType.WECHATPAY_JSAPI;
-        else return PayType.WECHATPAY;
+        if ("APP".equalsIgnoreCase(tradeType)) return PayType.WEIXIN_APP;
+        else if ("JSAPI".equalsIgnoreCase(tradeType)) return PayType.WEIXIN_JSAPI;
+        else return PayType.WEIXIN;
     }
 
     @Override

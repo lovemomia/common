@@ -10,8 +10,16 @@ import java.util.Date;
 import java.util.List;
 
 public class TimeUtil {
-    private static final DateFormat YEAR_DATE_FORMATTER = new SimpleDateFormat("yyyyMMdd");
-    private static final DateFormat MONTH_DATE_FORMATTER = new SimpleDateFormat("M月d日");
+    public static class TimeUnit {
+        public static final int MONTH = 1;
+        public static final int QUARTER = 2;
+        public static final int YEAR = 3;
+    }
+
+    public static final DateFormat STANDARD_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy年MM月dd");
+
+    private static final DateFormat YEAR_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     private static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
     private static final String[] AM_PM = { "上午", "下午" };
 
@@ -33,16 +41,6 @@ public class TimeUtil {
         }
     }
 
-    public static String formatMonthDateWithWeekDay(Date time) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(MONTH_DATE_FORMATTER.format(time))
-                .append("(")
-                .append(TimeUtil.getWeekDay(time))
-                .append(")");
-
-        return builder.toString();
-    }
-
     public static String getWeekDay(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -51,7 +49,7 @@ public class TimeUtil {
     }
 
     public static boolean isSameDay(Date day1, Date day2) {
-        return YEAR_DATE_FORMATTER.format(day1).equals(YEAR_DATE_FORMATTER.format(day2));
+        return YEAR_DATE_FORMAT.format(day1).equals(YEAR_DATE_FORMAT.format(day2));
     }
 
     public static String getAmPm(Date date) {
@@ -59,27 +57,6 @@ public class TimeUtil {
         calendar.setTime(date);
 
         return AM_PM[calendar.get(Calendar.AM_PM)];
-    }
-
-    public static String formatYearMonth(int month) {
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
-
-        if (month < currentMonth) return String.format("%d-%02d", currentYear + 1, month);
-        return String.format("%d-%02d", currentYear, month);
-    }
-
-    public static String formatNextYearMonth(int month) {
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
-
-        int nextMonth = month + 1;
-        nextMonth = nextMonth > 12 ? nextMonth - 12 : nextMonth;
-
-        if (month < currentMonth || nextMonth < month) return String.format("%d-%02d", currentYear + 1, nextMonth);
-        return String.format("%d-%02d", currentYear, nextMonth);
     }
 
     public static float getAge(Date birthday) {
@@ -101,20 +78,42 @@ public class TimeUtil {
     public static String formatAge(Date birthday) {
         float age = getAge(birthday);
 
-        if (age <= 0) return "未出生";
-        else if (age > 0 && age < 1) {
+        if (age <= 0) {
+            return "未出生";
+        } else if (age > 0 && age < 1) {
             int month = (int) (age * 12);
             if (month == 0) month = 1;
             return month + "个月";
+        } else {
+            return ((int) age) + "岁";
         }
-        else return ((int) age) + "岁";
     }
 
     public static boolean isAdult(Date birthday) {
-        return getAge(birthday) > 15;
+        return getAge(birthday) >= 18;
     }
 
     public static boolean isChild(Date birthday) {
-        return getAge(birthday) < 15;
+        return getAge(birthday) < 18;
+    }
+
+    public static Date add(Date startTime, int time, int timeUnit) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startTime);
+
+        switch (timeUnit) {
+            case TimeUnit.MONTH:
+                calendar.add(Calendar.MONTH, time);
+                break;
+            case TimeUnit.QUARTER:
+                calendar.add(Calendar.MONTH, time * 3);
+                break;
+            case TimeUnit.YEAR:
+                calendar.add(Calendar.YEAR, time);
+                break;
+            default: break;
+        }
+
+        return calendar.getTime();
     }
 }
