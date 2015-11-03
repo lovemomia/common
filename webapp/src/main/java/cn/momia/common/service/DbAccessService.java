@@ -3,11 +3,15 @@ package cn.momia.common.service;
 import cn.momia.common.reload.Reloadable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,8 +38,12 @@ public abstract class DbAccessService extends Reloadable {
     protected void doReload() {}
 
     public int queryInt(String sql, Object[] args) {
-        Number number = jdbcTemplate.queryForObject(sql, args, Integer.class);
-        return (number != null ? number.intValue() : 0);
+        return jdbcTemplate.query(sql, args, new ResultSetExtractor<Integer>() {
+            @Override
+            public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        });
     }
 
     public List<Integer> queryIntList(String sql) {
@@ -47,8 +55,12 @@ public abstract class DbAccessService extends Reloadable {
     }
 
     public long queryLong(String sql, Object[] args) {
-        Number number = jdbcTemplate.queryForObject(sql, args, Integer.class);
-        return (number != null ? number.intValue() : 0);
+        return jdbcTemplate.query(sql, args, new ResultSetExtractor<Long>() {
+            @Override
+            public Long extractData(ResultSet rs) throws SQLException, DataAccessException {
+                return rs.next() ? rs.getLong(1) : 0;
+            }
+        });
     }
 
     public List<Long> queryLongList(String sql) {
