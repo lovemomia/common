@@ -22,11 +22,12 @@ public abstract class ServiceApi {
         this.service = service;
     }
 
-    protected String url(Object... paths) {
+    protected String url(String path, Object... args) {
+        path = String.format(path, args);
+
         StringBuilder urlBuilder = new StringBuilder().append(service);
-        for (Object path : paths) {
-            urlBuilder.append("/").append(path);
-        }
+        if (!path.startsWith("/")) urlBuilder.append("/");
+        urlBuilder.append(path);
 
         return urlBuilder.toString();
     }
