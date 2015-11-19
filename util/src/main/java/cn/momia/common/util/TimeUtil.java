@@ -17,9 +17,9 @@ public class TimeUtil {
     }
 
     public static final DateFormat STANDARD_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy年MM月dd");
+    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    private static final DateFormat YEAR_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
+    private static final DateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     private static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
     private static final String[] AM_PM = { "上午", "下午" };
 
@@ -49,7 +49,7 @@ public class TimeUtil {
     }
 
     public static boolean isSameDay(Date day1, Date day2) {
-        return YEAR_DATE_FORMAT.format(day1).equals(YEAR_DATE_FORMAT.format(day2));
+        return SHORT_DATE_FORMAT.format(day1).equals(SHORT_DATE_FORMAT.format(day2));
     }
 
     public static String getAmPm(Date date) {
