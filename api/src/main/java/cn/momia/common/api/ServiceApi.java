@@ -1,5 +1,6 @@
 package cn.momia.common.api;
 
+import cn.momia.common.api.dto.PagedList;
 import cn.momia.common.api.exception.MomiaLoginException;
 import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.api.http.MomiaHttpResponse;
@@ -14,6 +15,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.List;
 
 public abstract class ServiceApi {
     private String service;
@@ -32,7 +34,7 @@ public abstract class ServiceApi {
         return urlBuilder.toString();
     }
 
-    protected Object executeRequest(HttpUriRequest request) {
+    protected Object execute(HttpUriRequest request) {
         try {
             HttpClient httpClient = createHttpClient();
 
@@ -47,6 +49,22 @@ public abstract class ServiceApi {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected <T> T executeReturnObject(HttpUriRequest request, Class<T> clazz) {
+        Object object = execute(request);
+        if (object instanceof JSON) return CastUtil.toObject((JSON) object, clazz);
+        return clazz.cast(object);
+    }
+
+    protected <T> List<T> executeReturnList(HttpUriRequest request, Class<T> clazz) {
+        Object object = execute(request);
+        return CastUtil.toList((JSON) object, clazz);
+    }
+
+    protected <T> PagedList<T> executeReturnPagedList(HttpUriRequest request, Class<T> clazz) {
+        Object object = execute(request);
+        return CastUtil.toPagedList((JSON) object, clazz);
     }
 
     private HttpClient createHttpClient() {
