@@ -77,7 +77,7 @@ public class MomiaHttpRequestBuilder {
         return POST(uri, content, "application/json");
     }
 
-    public static HttpUriRequest POST(String uri, final String content, final String contentType) {
+    public static HttpUriRequest POST(String uri, String content, String contentType) {
         HttpPost httpPost = new HttpPost(uri);
         parseEntity(httpPost, content, contentType);
 
@@ -93,6 +93,10 @@ public class MomiaHttpRequestBuilder {
         httpMethod.setEntity(entity);
     }
 
+    public static HttpUriRequest PUT(String uri) {
+        return PUT(uri, (Map) null);
+    }
+
     public static HttpUriRequest PUT(String uri, Map<String, String> params) {
         HttpPut httpPut = new HttpPut(uri);
         parseEntity(httpPut, params);
@@ -104,11 +108,15 @@ public class MomiaHttpRequestBuilder {
         return PUT(uri, content, "application/json");
     }
 
-    public static HttpUriRequest PUT(String uri, final String content, final String contentType) {
+    public static HttpUriRequest PUT(String uri, String content, String contentType) {
         HttpPut httpPut = new HttpPut(uri);
         parseEntity(httpPut, content, contentType);
 
         return httpPut;
+    }
+
+    public static HttpUriRequest DELETE(String uri) {
+        return DELETE(uri, null);
     }
 
     public static HttpUriRequest DELETE(String uri, Map<String, String> params) {
