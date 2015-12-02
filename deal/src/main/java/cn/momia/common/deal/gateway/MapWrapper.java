@@ -1,4 +1,4 @@
-package cn.momia.common.collection;
+package cn.momia.common.deal.gateway;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

@@ -5,7 +5,7 @@ import cn.momia.common.deal.gateway.PayType;
 import cn.momia.common.util.TimeUtil;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.deal.gateway.CallbackParam;
-import cn.momia.common.collection.MapWrapper;
+import cn.momia.common.deal.gateway.MapWrapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;

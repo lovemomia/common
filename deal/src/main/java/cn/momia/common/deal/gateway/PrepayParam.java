@@ -1,7 +1,5 @@
 package cn.momia.common.deal.gateway;
 
-import cn.momia.common.collection.MapWrapper;
-
 import java.math.BigDecimal;
 
 public class PrepayParam extends MapWrapper {
