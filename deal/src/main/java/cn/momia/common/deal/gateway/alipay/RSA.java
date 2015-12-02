@@ -1,4 +1,4 @@
-package cn.momia.common.sign;
+package cn.momia.common.deal.gateway.alipay;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,6 +11,9 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
+/**
+ * 来自支付宝SDK示例代码，一般不要改动
+ */
 public class RSA {
     public static final String SIGN_ALGORITHMS = "SHA1WithRSA";
 

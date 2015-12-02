@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WechatpayGateway implements PaymentGateway {
+public class WechatpayGateway extends PaymentGateway {
     private static class PrepayRequestField {
         public static final String APPID = "appid"; //微信公众号id
         public static final String MCH_ID = "mch_id"; //商户id

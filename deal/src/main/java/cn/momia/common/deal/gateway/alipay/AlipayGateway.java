@@ -7,7 +7,7 @@ import cn.momia.common.client.ClientType;
 import cn.momia.common.deal.gateway.PrepayParam;
 import org.apache.commons.lang3.StringUtils;
 
-public class AlipayGateway implements PaymentGateway {
+public class AlipayGateway extends PaymentGateway {
     @Override
     public PrepayResult prepay(PrepayParam param) {
         PrepayResult result = new AlipayPrepayResult();
