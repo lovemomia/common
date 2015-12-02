@@ -1,6 +1,5 @@
 package cn.momia.common.service;
 
-import cn.momia.common.reload.Reloadable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
