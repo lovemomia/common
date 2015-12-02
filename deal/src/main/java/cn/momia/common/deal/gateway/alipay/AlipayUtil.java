@@ -1,6 +1,6 @@
 package cn.momia.common.deal.gateway.alipay;
 
-import cn.momia.common.api.exception.MomiaFailedException;
+import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.sign.RSA;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.client.ClientType;
@@ -37,7 +37,7 @@ public class AlipayUtil {
         try {
             return URLEncoder.encode(RSA.sign(StringUtils.join(kvs, "&"), Configuration.getString("Payment.Ali.PrivateKey"), "utf-8"), "utf-8");
         } catch (UnsupportedEncodingException e) {
-            throw new MomiaFailedException("签名错误");
+            throw new MomiaErrorException("签名错误");
         }
     }
 

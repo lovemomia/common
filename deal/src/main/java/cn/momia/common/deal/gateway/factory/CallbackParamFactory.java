@@ -1,6 +1,6 @@
 package cn.momia.common.deal.gateway.factory;
 
-import cn.momia.common.api.exception.MomiaFailedException;
+import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.deal.gateway.CallbackParam;
 import cn.momia.common.deal.gateway.PayType;
 import cn.momia.common.deal.gateway.alipay.AlipayCallbackParam;
@@ -13,7 +13,7 @@ public class CallbackParamFactory {
         switch (payType) {
             case PayType.ALIPAY: return new AlipayCallbackParam(params);
             case PayType.WEIXIN: return new WechatpayCallbackParam(params);
-            default: throw new MomiaFailedException("无效的支付类型: " + payType);
+            default: throw new MomiaErrorException("无效的支付类型: " + payType);
         }
     }
 }

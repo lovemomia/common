@@ -2,7 +2,7 @@ package cn.momia.common.webapp.ctrl;
 
 import cn.momia.common.api.exception.MomiaException;
 import cn.momia.common.api.exception.MomiaLoginException;
-import cn.momia.common.api.exception.MomiaFailedException;
+import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.api.http.MomiaHttpResponse;
 import cn.momia.common.webapp.config.Configuration;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public abstract class BaseController {
     public MomiaHttpResponse exception(Exception exception) throws Exception {
         if (exception instanceof MomiaException) LOGGER.error("exception!!", exception);
 
-        if (exception instanceof MomiaFailedException) {
+        if (exception instanceof MomiaErrorException) {
             return MomiaHttpResponse.FAILED(exception.getMessage());
         } else if (exception instanceof MomiaLoginException) {
             return MomiaHttpResponse.TOKEN_EXPIRED;

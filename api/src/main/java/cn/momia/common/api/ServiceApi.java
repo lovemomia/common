@@ -1,7 +1,7 @@
 package cn.momia.common.api;
 
 import cn.momia.common.api.exception.MomiaLoginException;
-import cn.momia.common.api.exception.MomiaFailedException;
+import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.api.http.MomiaHttpResponse;
 import cn.momia.common.api.util.CastUtil;
 import com.alibaba.fastjson.JSON;
@@ -41,7 +41,7 @@ public abstract class ServiceApi {
 
             MomiaHttpResponse momiaHttpResponse = buildResponse(response);
             if (momiaHttpResponse.isTokenExpired()) throw new MomiaLoginException();
-            if (!momiaHttpResponse.isSuccessful()) throw new MomiaFailedException(momiaHttpResponse.getErrmsg());
+            if (!momiaHttpResponse.isSuccessful()) throw new MomiaErrorException(momiaHttpResponse.getErrmsg());
 
             return momiaHttpResponse.getData();
         } catch (IOException e) {
