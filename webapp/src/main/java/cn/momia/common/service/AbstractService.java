@@ -12,6 +12,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -96,6 +98,45 @@ public abstract class AbstractService extends Reloadable {
     public <T> T queryObject(String sql, Object[] args, Class<T> clazz, T defaultValue) {
         List<T> objects = queryObjectList(sql, args, clazz);
         return objects.isEmpty() ? defaultValue : objects.get(0);
+    }
+
+    public <K, V> Map<K, V> queryMap(String sql, Class<K> keyClass, Class<V> valueClass) {
+        return queryMap(sql, null, keyClass, valueClass);
+    }
+
+    public <K, V> Map<K, V> queryMap(String sql, Object[] args, final Class<K> keyClass, final Class<V> valueClass) {
+        final Map<K, V> map = new HashMap<K, V>();
+        jdbcTemplate.query(sql, args, new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet rs) throws SQLException {
+                map.put(keyClass.cast(rs.getObject(1)), valueClass.cast(rs.getObject(2)));
+            }
+        });
+
+        return map;
+    }
+
+    public <K, V> Map<K, List<V>> queryListMap(String sql, Class<K> keyClass, Class<V> valueClass) {
+        return queryListMap(sql, null, keyClass, valueClass);
+    }
+
+    public <K, V> Map<K, List<V>> queryListMap(String sql, Object[] args, final Class<K> keyClass, final Class<V> valueClass) {
+        final Map<K, List<V>> map = new HashMap<K, List<V>>();
+        jdbcTemplate.query(sql, args, new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet rs) throws SQLException {
+                K key = keyClass.cast(rs.getObject(1));
+                V value = valueClass.cast(rs.getObject(2));
+                List<V> list = map.get(key);
+                if (list == null) {
+                    list = new ArrayList<V>();
+                    map.put(key, list);
+                }
+                list.add(value);
+            }
+        });
+
+        return map;
     }
 
     public <T> List<T> queryObjectList(String sql, Class<T> clazz) {
