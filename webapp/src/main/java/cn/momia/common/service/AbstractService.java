@@ -164,7 +164,14 @@ public abstract class AbstractService extends Reloadable {
             String fieldName = entry.getKey();
             Method method = entry.getValue();
             Object fieldValue = row.get(fieldName);
-            if (fieldValue != null) method.invoke(t, fieldValue);
+            if (fieldValue != null) {
+                Class<?> paramType = method.getParameterTypes()[0];
+                if (paramType == Boolean.class || paramType == boolean.class) {
+                    method.invoke(t, ((Integer) fieldValue) == 1);
+                } else {
+                    method.invoke(t, fieldValue);
+                }
+            }
         }
 
         return t;
