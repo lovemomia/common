@@ -1,6 +1,5 @@
 package cn.momia.common.service;
 
-import cn.momia.common.reload.Reloadable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +12,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -99,6 +100,45 @@ public abstract class AbstractService extends Reloadable {
         return objects.isEmpty() ? defaultValue : objects.get(0);
     }
 
+    public <K, V> Map<K, V> queryMap(String sql, Class<K> keyClass, Class<V> valueClass) {
+        return queryMap(sql, null, keyClass, valueClass);
+    }
+
+    public <K, V> Map<K, V> queryMap(String sql, Object[] args, final Class<K> keyClass, final Class<V> valueClass) {
+        final Map<K, V> map = new HashMap<K, V>();
+        jdbcTemplate.query(sql, args, new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet rs) throws SQLException {
+                map.put(keyClass.cast(rs.getObject(1)), valueClass.cast(rs.getObject(2)));
+            }
+        });
+
+        return map;
+    }
+
+    public <K, V> Map<K, List<V>> queryListMap(String sql, Class<K> keyClass, Class<V> valueClass) {
+        return queryListMap(sql, null, keyClass, valueClass);
+    }
+
+    public <K, V> Map<K, List<V>> queryListMap(String sql, Object[] args, final Class<K> keyClass, final Class<V> valueClass) {
+        final Map<K, List<V>> map = new HashMap<K, List<V>>();
+        jdbcTemplate.query(sql, args, new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet rs) throws SQLException {
+                K key = keyClass.cast(rs.getObject(1));
+                V value = valueClass.cast(rs.getObject(2));
+                List<V> list = map.get(key);
+                if (list == null) {
+                    list = new ArrayList<V>();
+                    map.put(key, list);
+                }
+                list.add(value);
+            }
+        });
+
+        return map;
+    }
+
     public <T> List<T> queryObjectList(String sql, Class<T> clazz) {
         return queryObjectList(sql, null, clazz);
     }
@@ -124,7 +164,14 @@ public abstract class AbstractService extends Reloadable {
             String fieldName = entry.getKey();
             Method method = entry.getValue();
             Object fieldValue = row.get(fieldName);
-            if (fieldValue != null) method.invoke(t, fieldValue);
+            if (fieldValue != null) {
+                Class<?> paramType = method.getParameterTypes()[0];
+                if (paramType == Boolean.class || paramType == boolean.class) {
+                    method.invoke(t, ((Integer) fieldValue) == 1);
+                } else {
+                    method.invoke(t, fieldValue);
+                }
+            }
         }
 
         return t;

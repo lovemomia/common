@@ -1,6 +1,9 @@
-package cn.momia.common.sign;
+package cn.momia.common.deal.gateway.alipay;
 
-public final class Base64 {
+/**
+ * 来自支付宝SDK示例代码，一般不要改动
+ */
+public class Base64 {
     static private final int     BASELENGTH           = 128;
     static private final int     LOOKUPLENGTH         = 64;
     static private final int     TWENTYFOURBITGROUP   = 24;

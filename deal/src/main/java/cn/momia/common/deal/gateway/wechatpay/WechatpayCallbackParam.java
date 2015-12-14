@@ -1,8 +1,8 @@
 package cn.momia.common.deal.gateway.wechatpay;
 
-import cn.momia.common.api.exception.MomiaFailedException;
+import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.deal.gateway.CallbackParam;
-import cn.momia.common.collection.MapWrapper;
+import cn.momia.common.deal.gateway.MapWrapper;
 import cn.momia.common.client.ClientType;
 import cn.momia.common.deal.gateway.PayType;
 
@@ -54,7 +54,7 @@ public class WechatpayCallbackParam extends MapWrapper implements CallbackParam 
         int clientType;
         if ("APP".equalsIgnoreCase(tradeType)) clientType = ClientType.APP;
         else if ("JSAPI".equalsIgnoreCase(tradeType)) clientType = ClientType.WAP;
-        else throw new MomiaFailedException("invalid trade type: " + tradeType);
+        else throw new MomiaErrorException("invalid trade type: " + tradeType);
 
         return WechatpayUtil.validateSign(getAll(), clientType);
     }

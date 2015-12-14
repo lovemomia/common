@@ -1,4 +1,4 @@
-package cn.momia.common.reload;
+package cn.momia.common.service;
 
 import java.util.Date;
 

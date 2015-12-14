@@ -1,6 +1,6 @@
 package cn.momia.common.deal.gateway.wechatpay;
 
-import cn.momia.common.api.exception.MomiaFailedException;
+import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.client.ClientType;
 import cn.momia.common.deal.gateway.PaymentGateway;
 import cn.momia.common.util.XmlUtil;
@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WechatpayGateway implements PaymentGateway {
+public class WechatpayGateway extends PaymentGateway {
     private static class PrepayRequestField {
         public static final String APPID = "appid"; //微信公众号id
         public static final String MCH_ID = "mch_id"; //商户id
@@ -65,7 +65,7 @@ public class WechatpayGateway implements PaymentGateway {
             HttpClient httpClient = HttpClients.createDefault();
             HttpPost request = createRequest(param);
             HttpResponse response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaFailedException("fail to execute request: " + request);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaErrorException("fail to execute request: " + request);
 
             String entity = EntityUtils.toString(response.getEntity(), "UTF-8");
             processResponseEntity(result, entity, param.getClientType());
@@ -103,7 +103,7 @@ public class WechatpayGateway implements PaymentGateway {
                 requestParams.put(PrepayRequestField.OPENID, getJsApiOpenId(param.get(PrepayRequestField.CODE)));
                 requestParams.put(PrepayRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
                 break;
-            default: new MomiaFailedException("not supported client type: " + clientType);
+            default: new MomiaErrorException("not supported client type: " + clientType);
         }
 
         requestParams.put(PrepayRequestField.NONCE_STR, WechatpayUtil.createNoncestr(32));
@@ -134,16 +134,16 @@ public class WechatpayGateway implements PaymentGateway {
                     .append("grant_type=authorization_code");
             HttpGet request = new HttpGet(urlBuilder.toString());
             HttpResponse response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaFailedException("fail to execute request: " + request);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaErrorException("fail to execute request: " + request);
 
             String entity = EntityUtils.toString(response.getEntity());
             JSONObject resultJson = JSON.parseObject(entity);
 
             if (resultJson.containsKey("openid")) return resultJson.getString("openid");
 
-            throw new MomiaFailedException("fail to get openid");
+            throw new MomiaErrorException("fail to get openid");
         } catch (Exception e) {
-            throw new MomiaFailedException("fail to get openid");
+            throw new MomiaErrorException("fail to get openid");
         }
     }
 
@@ -156,7 +156,7 @@ public class WechatpayGateway implements PaymentGateway {
         result.setSuccessful(successful);
 
         if (successful) {
-            if (!WechatpayUtil.validateSign(params, clientType)) throw new MomiaFailedException("fail to prepay, invalid sign");
+            if (!WechatpayUtil.validateSign(params, clientType)) throw new MomiaErrorException("fail to prepay, invalid sign");
 
             if (ClientType.isApp(clientType)) {
                 result.add(WechatpayPrepayResult.App.Field.APPID, Configuration.getString("Payment.Wechat.AppAppId"));
@@ -174,7 +174,7 @@ public class WechatpayGateway implements PaymentGateway {
                 result.add(WechatpayPrepayResult.JsApi.Field.SIGN_TYPE, "MD5");
                 result.add(WechatpayPrepayResult.JsApi.Field.PAY_SIGN, WechatpayUtil.sign(result.getAll(), clientType));
             } else {
-                throw new MomiaFailedException("unsupported trade source type: " + clientType);
+                throw new MomiaErrorException("unsupported trade source type: " + clientType);
             }
         } else {
             LOGGER.error("fail to prepay: {}/{}/{}", params.get(PREPAY_REQUEST_RETURN_CODE), params.get(PREPAY_REQUEST_RESULT_CODE), params.get(PREPAY_REQUEST_RETURN_MSG));

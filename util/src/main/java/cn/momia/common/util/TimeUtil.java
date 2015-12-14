@@ -4,10 +4,8 @@ import com.alibaba.fastjson.util.TypeUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class TimeUtil {
     public static class TimeUnit {
@@ -16,22 +14,15 @@ public class TimeUtil {
         public static final int YEAR = 3;
     }
 
-    public static final DateFormat STANDARD_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final DateFormat STANDARD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final DateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    private static final DateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
+    public static final DateFormat YEAR_MONTH_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final DateFormat MONTH_DATE_FORMAT = new SimpleDateFormat("MM-dd");
+    public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+
     private static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
     private static final String[] AM_PM = { "上午", "下午" };
-
-    public static List<Date> castToDates(List<String> timeStrs) {
-        List<Date> times = new ArrayList<Date>();
-        for (String timeStr : timeStrs) {
-            Date time = castToDate(timeStr);
-            if (time != null) times.add(time);
-        }
-
-        return times;
-    }
 
     public static Date castToDate(String timeStr) {
         try {
@@ -59,22 +50,6 @@ public class TimeUtil {
         return AM_PM[calendar.get(Calendar.AM_PM)];
     }
 
-    public static float getAge(Date birthday) {
-        Calendar calendar = Calendar.getInstance();
-        int yearNow = calendar.get(Calendar.YEAR);
-        int monthNow = calendar.get(Calendar.MONTH);
-        calendar.setTime(birthday);
-        int yearBorn = calendar.get(Calendar.YEAR);
-        int monthBorn = calendar.get(Calendar.MONTH);
-
-        int year = yearNow - yearBorn;
-        if (year >= 1) return year;
-
-        int month = monthNow - monthBorn;
-        if (month > 0 && month < 1) month = 1;
-        return month / 12.0F;
-    }
-
     public static String formatAge(Date birthday) {
         float age = getAge(birthday);
 
@@ -89,12 +64,20 @@ public class TimeUtil {
         }
     }
 
-    public static boolean isAdult(Date birthday) {
-        return getAge(birthday) >= 18;
-    }
+    private static float getAge(Date birthday) {
+        Calendar calendar = Calendar.getInstance();
+        int yearNow = calendar.get(Calendar.YEAR);
+        int monthNow = calendar.get(Calendar.MONTH);
+        calendar.setTime(birthday);
+        int yearBorn = calendar.get(Calendar.YEAR);
+        int monthBorn = calendar.get(Calendar.MONTH);
 
-    public static boolean isChild(Date birthday) {
-        return getAge(birthday) < 18;
+        int year = yearNow - yearBorn;
+        if (year >= 1) return year;
+
+        int month = monthNow - monthBorn;
+        if (month > 0 && month < 1) month = 1;
+        return month / 12.0F;
     }
 
     public static Date add(Date startTime, int time, int timeUnit) {
@@ -115,5 +98,21 @@ public class TimeUtil {
         }
 
         return calendar.getTime();
+    }
+
+    public static String formatAddTime(Date addTime) {
+        Calendar calendar = Calendar.getInstance();
+        int curYear = calendar.get(Calendar.YEAR);
+        int curMonth = calendar.get(Calendar.MONTH);
+        int curDay = calendar.get(Calendar.DATE);
+
+        calendar.setTime(addTime);
+        int addYear = calendar.get(Calendar.YEAR);
+        int addMonth = calendar.get(Calendar.MONTH);
+        int addDay = calendar.get(Calendar.DATE);
+
+        if (addYear != curYear) return YEAR_MONTH_DATE_FORMAT.format(addTime);
+        if (addMonth != curMonth || addDay != curDay) return MONTH_DATE_FORMAT.format(addTime);
+        return TIME_FORMAT.format(addTime);
     }
 }

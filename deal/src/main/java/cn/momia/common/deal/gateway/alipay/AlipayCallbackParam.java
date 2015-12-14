@@ -1,11 +1,11 @@
 package cn.momia.common.deal.gateway.alipay;
 
-import cn.momia.common.api.exception.MomiaFailedException;
+import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.deal.gateway.PayType;
 import cn.momia.common.util.TimeUtil;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.deal.gateway.CallbackParam;
-import cn.momia.common.collection.MapWrapper;
+import cn.momia.common.deal.gateway.MapWrapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -55,7 +55,7 @@ public class AlipayCallbackParam extends MapWrapper implements CallbackParam {
         HttpClient httpClient = HttpClients.createDefault();
         HttpGet request = new HttpGet(verifyUrl);
         HttpResponse response = httpClient.execute(request);
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaFailedException("fail to execute request: " + request);
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaErrorException("fail to execute request: " + request);
 
         String entity = EntityUtils.toString(response.getEntity());
 
