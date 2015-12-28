@@ -1,7 +1,7 @@
 package cn.momia.common.deal.gateway.wechatpay;
 
 import cn.momia.common.api.exception.MomiaErrorException;
-import cn.momia.common.client.ClientType;
+import cn.momia.common.api.client.ClientType;
 import cn.momia.common.deal.gateway.PaymentGateway;
 import cn.momia.common.util.XmlUtil;
 import cn.momia.common.webapp.config.Configuration;

@@ -1,4 +1,4 @@
-package cn.momia.common.client;
+package cn.momia.common.api.client;
 
 public class ClientType {
     public static final int APP = 1;

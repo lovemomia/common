@@ -2,7 +2,7 @@ package cn.momia.common.deal.gateway.alipay;
 
 import cn.momia.common.api.exception.MomiaErrorException;
 import cn.momia.common.webapp.config.Configuration;
-import cn.momia.common.client.ClientType;
+import cn.momia.common.api.client.ClientType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
