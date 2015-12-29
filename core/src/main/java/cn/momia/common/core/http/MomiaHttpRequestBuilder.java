@@ -1,4 +1,4 @@
-package cn.momia.common.api.http;
+package cn.momia.common.core.http;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;

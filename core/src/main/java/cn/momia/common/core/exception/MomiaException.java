@@ -1,4 +1,4 @@
-package cn.momia.common.api.exception;
+package cn.momia.common.core.exception;
 
 public abstract class MomiaException extends RuntimeException {
     public MomiaException() {}

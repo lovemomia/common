@@ -1,4 +1,4 @@
-package cn.momia.common.api.platform;
+package cn.momia.common.core.platform;
 
 public class Platform {
     public static final int APP = 1;

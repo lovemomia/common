@@ -1,10 +1,10 @@
-package cn.momia.common.api;
+package cn.momia.common.core;
 
-import cn.momia.common.api.dto.PagedList;
-import cn.momia.common.api.exception.MomiaLoginException;
-import cn.momia.common.api.exception.MomiaErrorException;
-import cn.momia.common.api.http.MomiaHttpResponse;
-import cn.momia.common.api.util.CastUtil;
+import cn.momia.common.core.dto.PagedList;
+import cn.momia.common.core.exception.MomiaLoginException;
+import cn.momia.common.core.exception.MomiaErrorException;
+import cn.momia.common.core.http.MomiaHttpResponse;
+import cn.momia.common.core.util.CastUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;

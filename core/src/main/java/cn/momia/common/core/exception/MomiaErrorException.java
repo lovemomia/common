@@ -1,4 +1,4 @@
-package cn.momia.common.api.exception;
+package cn.momia.common.core.exception;
 
 public class MomiaErrorException extends MomiaException {
     public MomiaErrorException(String msg) {

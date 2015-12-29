@@ -1,6 +1,6 @@
-package cn.momia.common.api.util;
+package cn.momia.common.core.util;
 
-import cn.momia.common.api.dto.PagedList;
+import cn.momia.common.core.dto.PagedList;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

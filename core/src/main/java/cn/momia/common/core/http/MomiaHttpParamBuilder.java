@@ -1,4 +1,4 @@
-package cn.momia.common.api.http;
+package cn.momia.common.core.http;
 
 import java.util.HashMap;
 import java.util.Map;

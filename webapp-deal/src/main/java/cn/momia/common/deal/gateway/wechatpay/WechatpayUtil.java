@@ -1,6 +1,6 @@
 package cn.momia.common.deal.gateway.wechatpay;
 
-import cn.momia.common.api.platform.Platform;
+import cn.momia.common.core.platform.Platform;
 import cn.momia.common.webapp.config.Configuration;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;

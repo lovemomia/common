@@ -1,4 +1,4 @@
-package cn.momia.common.api.util;
+package cn.momia.common.core.util;
 
 import com.alibaba.fastjson.util.TypeUtils;
 

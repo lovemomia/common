@@ -1,9 +1,9 @@
 package cn.momia.common.webapp.ctrl;
 
-import cn.momia.common.api.exception.MomiaException;
-import cn.momia.common.api.exception.MomiaLoginException;
-import cn.momia.common.api.exception.MomiaErrorException;
-import cn.momia.common.api.http.MomiaHttpResponse;
+import cn.momia.common.core.exception.MomiaException;
+import cn.momia.common.core.exception.MomiaLoginException;
+import cn.momia.common.core.exception.MomiaErrorException;
+import cn.momia.common.core.http.MomiaHttpResponse;
 import cn.momia.common.webapp.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

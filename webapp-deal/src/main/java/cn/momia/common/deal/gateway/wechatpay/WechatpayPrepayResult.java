@@ -1,6 +1,6 @@
 package cn.momia.common.deal.gateway.wechatpay;
 
-import cn.momia.common.api.platform.Platform;
+import cn.momia.common.core.platform.Platform;
 import cn.momia.common.deal.gateway.PrepayResult;
 
 public class WechatpayPrepayResult extends PrepayResult {

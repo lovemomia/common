@@ -1,4 +1,4 @@
-package cn.momia.common.util;
+package cn.momia.common.core.util;
 
 public class PoiUtil {
     public static int distance(double lng1, double lat1, double lng2, double lat2) {

@@ -1,4 +1,4 @@
-package cn.momia.common.api.dto;
+package cn.momia.common.core.dto;
 
 import java.util.ArrayList;
 import java.util.List;
