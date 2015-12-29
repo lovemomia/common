@@ -1,4 +1,4 @@
-package cn.momia.common.core;
+package cn.momia.common.core.api;
 
 import cn.momia.common.core.dto.PagedList;
 import cn.momia.common.core.exception.MomiaLoginException;
