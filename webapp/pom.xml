@@ -59,10 +59,10 @@
             <version>5.1.35</version>
         </dependency>
 
-        <!-- Momia -->
+        <!-- Momia Core -->
         <dependency>
             <groupId>cn.momia</groupId>
-            <artifactId>duola-common-api</artifactId>
+            <artifactId>duola-common-core</artifactId>
             <version>1.1.0</version>
         </dependency>
 

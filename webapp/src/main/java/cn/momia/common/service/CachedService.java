@@ -1,11 +1,9 @@
 package cn.momia.common.service;
 
-import cn.momia.common.api.Cacheable;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class CachedService extends AbstractService implements Cacheable {
+public class CachedService extends AbstractService {
     private List<?> cachedList = new ArrayList<Object>();
 
     private Class<?> type;
@@ -32,7 +30,6 @@ public class CachedService extends AbstractService implements Cacheable {
         cachedList = queryObjectList(sql, type);
     }
 
-    @Override
     public List<?> listAll() {
         if (isOutOfDate()) reload();
         return cachedList;

@@ -13,8 +13,7 @@
     <url>http://www.momia.cn</url>
 
     <modules>
-        <module>util</module>
-        <module>api</module>
+        <module>core</module>
         <module>webapp</module>
         <module>webapp-deal</module>
     </modules>

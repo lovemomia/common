@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="alipay" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField" value="cn.momia.common.deal.gateway.PayType.ALIPAY" />
+    </bean>
+    <bean id="alipayGateway" class="cn.momia.common.deal.gateway.alipay.AlipayGateway" />
+
+    <bean id="wechatpay" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField" value="cn.momia.common.deal.gateway.PayType.WEIXIN" />
+    </bean>
+    <bean id="wechatpayGateway" class="cn.momia.common.deal.gateway.wechatpay.WechatpayGateway" />
+
+    <bean class="cn.momia.common.deal.gateway.factory.PaymentGatewayFactory">
+        <property name="prototypes">
+            <map value-type="cn.momia.common.deal.gateway.PaymentGateway">
+                <entry key-ref="alipay">
+                    <ref bean="alipayGateway" />
+                </entry>
+                <entry key-ref="wechatpay">
+                    <ref bean="wechatpayGateway" />
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>
