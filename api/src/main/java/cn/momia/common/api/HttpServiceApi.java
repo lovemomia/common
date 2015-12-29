@@ -17,7 +17,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class ServiceApi {
+public abstract class HttpServiceApi {
     private String service;
 
     public void setService(String service) {
