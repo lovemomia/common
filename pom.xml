@@ -15,7 +15,7 @@
     <modules>
         <module>util</module>
         <module>api</module>
-        <module>deal</module>
         <module>webapp</module>
+        <module>webapp-deal</module>
     </modules>
 </project>
