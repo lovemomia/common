@@ -1,7 +1,7 @@
 package cn.momia.common.deal.gateway.wechatpay;
 
 import cn.momia.common.api.exception.MomiaErrorException;
-import cn.momia.common.api.client.ClientType;
+import cn.momia.common.api.platform.Platform;
 import cn.momia.common.deal.gateway.PaymentGateway;
 import cn.momia.common.util.XmlUtil;
 import cn.momia.common.webapp.config.Configuration;
@@ -59,7 +59,7 @@ public class WechatpayGateway extends PaymentGateway {
 
     @Override
     public PrepayResult prepay(PrepayParam param) {
-        PrepayResult result = WechatpayPrepayResult.create(param.getClientType());
+        PrepayResult result = WechatpayPrepayResult.create(param.getPlatform());
 
         try {
             HttpClient httpClient = HttpClients.createDefault();
@@ -68,7 +68,7 @@ public class WechatpayGateway extends PaymentGateway {
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaErrorException("fail to execute request: " + request);
 
             String entity = EntityUtils.toString(response.getEntity(), "UTF-8");
-            processResponseEntity(result, entity, param.getClientType());
+            processResponseEntity(result, entity, param.getPlatform());
         } catch (Exception e) {
             LOGGER.error("fail to prepay", e);
             result.setSuccessful(false);
@@ -91,19 +91,19 @@ public class WechatpayGateway extends PaymentGateway {
     private Map<String, String> createRequestParams(PrepayParam param) {
         Map<String, String> requestParams = new HashMap<String, String>();
 
-        int clientType = param.getClientType();
-        switch (clientType) {
-            case ClientType.APP:
+        int platform = param.getPlatform();
+        switch (platform) {
+            case Platform.APP:
                 requestParams.put(PrepayRequestField.APPID, Configuration.getString("Payment.Wechat.AppAppId"));
                 requestParams.put(PrepayRequestField.PRODUCT_ID, String.valueOf(param.getProductId()));
                 requestParams.put(PrepayRequestField.MCH_ID, Configuration.getString("Payment.Wechat.AppMchId"));
                 break;
-            case ClientType.WAP:
+            case Platform.WAP:
                 requestParams.put(PrepayRequestField.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
                 requestParams.put(PrepayRequestField.OPENID, getJsApiOpenId(param.get(PrepayRequestField.CODE)));
                 requestParams.put(PrepayRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
                 break;
-            default: new MomiaErrorException("not supported client type: " + clientType);
+            default: new MomiaErrorException("not supported platform type: " + platform);
         }
 
         requestParams.put(PrepayRequestField.NONCE_STR, WechatpayUtil.createNoncestr(32));
@@ -114,7 +114,7 @@ public class WechatpayGateway extends PaymentGateway {
         requestParams.put(PrepayRequestField.NOTIFY_URL, Configuration.getString("Payment.Wechat.NotifyUrl"));
         requestParams.put(PrepayRequestField.TRADE_TYPE, param.get("type").toUpperCase());
         requestParams.put(PrepayRequestField.TIME_EXPIRE, DATE_FORMATTER.format(new Date(System.currentTimeMillis() + 30 * 60 * 1000)));
-        requestParams.put(PrepayRequestField.SIGN, WechatpayUtil.sign(requestParams, clientType));
+        requestParams.put(PrepayRequestField.SIGN, WechatpayUtil.sign(requestParams, platform));
 
         return requestParams;
     }
@@ -147,7 +147,7 @@ public class WechatpayGateway extends PaymentGateway {
         }
     }
 
-    private void processResponseEntity(PrepayResult result, String entity, int clientType) {
+    private void processResponseEntity(PrepayResult result, String entity, int platform) {
         Map<String, String> params = XmlUtil.xmlToMap(entity);
         String return_code = params.get(PREPAY_REQUEST_RETURN_CODE);
         String result_code = params.get(PREPAY_REQUEST_RESULT_CODE);
@@ -156,25 +156,25 @@ public class WechatpayGateway extends PaymentGateway {
         result.setSuccessful(successful);
 
         if (successful) {
-            if (!WechatpayUtil.validateSign(params, clientType)) throw new MomiaErrorException("fail to prepay, invalid sign");
+            if (!WechatpayUtil.validateSign(params, platform)) throw new MomiaErrorException("fail to prepay, invalid sign");
 
-            if (ClientType.isApp(clientType)) {
+            if (Platform.isApp(platform)) {
                 result.add(WechatpayPrepayResult.App.Field.APPID, Configuration.getString("Payment.Wechat.AppAppId"));
                 result.add(WechatpayPrepayResult.App.Field.PARTNERID, Configuration.getString("Payment.Wechat.AppMchId"));
                 result.add(WechatpayPrepayResult.App.Field.PREPAYID, params.get(PREPAY_REQUEST_PREPAY_ID));
                 result.add(WechatpayPrepayResult.App.Field.PACKAGE, "Sign=WXPay");
                 result.add(WechatpayPrepayResult.App.Field.NONCE_STR, WechatpayUtil.createNoncestr(32));
                 result.add(WechatpayPrepayResult.App.Field.TIMESTAMP, String.valueOf(new Date().getTime()).substring(0, 10));
-                result.add(WechatpayPrepayResult.App.Field.SIGN, WechatpayUtil.sign(result.getAll(), clientType));
-            } else if (ClientType.isWap(clientType)) {
+                result.add(WechatpayPrepayResult.App.Field.SIGN, WechatpayUtil.sign(result.getAll(), platform));
+            } else if (Platform.isWap(platform)) {
                 result.add(WechatpayPrepayResult.JsApi.Field.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
                 result.add(WechatpayPrepayResult.JsApi.Field.PACKAGE, "prepay_id=" + params.get(PREPAY_REQUEST_PREPAY_ID));
                 result.add(WechatpayPrepayResult.JsApi.Field.NONCE_STR, WechatpayUtil.createNoncestr(32));
                 result.add(WechatpayPrepayResult.JsApi.Field.TIMESTAMP, String.valueOf(new Date().getTime()).substring(0, 10));
                 result.add(WechatpayPrepayResult.JsApi.Field.SIGN_TYPE, "MD5");
-                result.add(WechatpayPrepayResult.JsApi.Field.PAY_SIGN, WechatpayUtil.sign(result.getAll(), clientType));
+                result.add(WechatpayPrepayResult.JsApi.Field.PAY_SIGN, WechatpayUtil.sign(result.getAll(), platform));
             } else {
-                throw new MomiaErrorException("unsupported trade source type: " + clientType);
+                throw new MomiaErrorException("unsupported trade source type: " + platform);
             }
         } else {
             LOGGER.error("fail to prepay: {}/{}/{}", params.get(PREPAY_REQUEST_RETURN_CODE), params.get(PREPAY_REQUEST_RESULT_CODE), params.get(PREPAY_REQUEST_RETURN_MSG));

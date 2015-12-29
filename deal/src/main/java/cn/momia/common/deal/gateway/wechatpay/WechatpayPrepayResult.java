@@ -1,11 +1,11 @@
 package cn.momia.common.deal.gateway.wechatpay;
 
-import cn.momia.common.api.client.ClientType;
+import cn.momia.common.api.platform.Platform;
 import cn.momia.common.deal.gateway.PrepayResult;
 
 public class WechatpayPrepayResult extends PrepayResult {
-    public static WechatpayPrepayResult create(int clientType) {
-        return ClientType.isApp(clientType) ? new WechatpayPrepayResult.App() : new WechatpayPrepayResult.JsApi();
+    public static WechatpayPrepayResult create(int platform) {
+        return Platform.isApp(platform) ? new WechatpayPrepayResult.App() : new WechatpayPrepayResult.JsApi();
     }
 
     public static class App extends WechatpayPrepayResult {

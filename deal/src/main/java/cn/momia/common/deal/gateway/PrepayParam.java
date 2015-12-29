@@ -3,7 +3,7 @@ package cn.momia.common.deal.gateway;
 import java.math.BigDecimal;
 
 public class PrepayParam extends MapWrapper {
-    private int clientType;
+    private int platform;
 
     private long orderId;
     private long productId;
@@ -13,12 +13,12 @@ public class PrepayParam extends MapWrapper {
 
     private String paymentResultUrl;
 
-    public int getClientType() {
-        return clientType;
+    public int getPlatform() {
+        return platform;
     }
 
-    public void setClientType(int clientType) {
-        this.clientType = clientType;
+    public void setPlatform(int platform) {
+        this.platform = platform;
     }
 
     public long getOrderId() {

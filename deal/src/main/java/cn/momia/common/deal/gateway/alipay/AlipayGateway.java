@@ -3,7 +3,7 @@ package cn.momia.common.deal.gateway.alipay;
 import cn.momia.common.deal.gateway.PaymentGateway;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.deal.gateway.PrepayResult;
-import cn.momia.common.api.client.ClientType;
+import cn.momia.common.api.platform.Platform;
 import cn.momia.common.deal.gateway.PrepayParam;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,9 +12,9 @@ public class AlipayGateway extends PaymentGateway {
     public PrepayResult prepay(PrepayParam param) {
         PrepayResult result = new AlipayPrepayResult();
 
-        if (ClientType.isApp(param.getClientType())) {
+        if (Platform.isApp(param.getPlatform())) {
             result.add(AlipayPrepayResult.Field.SERVICE, Configuration.getString("Payment.Ali.AppService"));
-        } else if (ClientType.isWap(param.getClientType())) {
+        } else if (Platform.isWap(param.getPlatform())) {
             result.add(AlipayPrepayResult.Field.SERVICE, Configuration.getString("Payment.Ali.WapService"));
             result.add(AlipayPrepayResult.Field.RETURN_URL, param.getPaymentResultUrl());
         }
@@ -31,7 +31,7 @@ public class AlipayGateway extends PaymentGateway {
         result.add(AlipayPrepayResult.Field.BODY, param.getProductTitle());
         result.add(AlipayPrepayResult.Field.IT_B_PAY, "30m");
         result.add(AlipayPrepayResult.Field.SHOW_URL, param.getProductUrl());
-        result.add(AlipayPrepayResult.Field.SIGN, AlipayUtil.sign(result.getAll(), param.getClientType()));
+        result.add(AlipayPrepayResult.Field.SIGN, AlipayUtil.sign(result.getAll(), param.getPlatform()));
 
         result.setSuccessful(!StringUtils.isBlank(result.get(AlipayPrepayResult.Field.SIGN)));
 
