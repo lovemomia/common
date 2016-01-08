@@ -20,13 +20,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractService extends Reloadable {
+public abstract class AbstractService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractService.class);
 
     private static Map<String, Map<String, Method>> classSetterMethods = new HashMap<String, Map<String, Method>>();
 
+    private Date lastReloadTime = null;
+    private int reloadIntervalMinutes = 24 * 60;
+
     private JdbcTemplate jdbcTemplate;
     private TransactionTemplate transactionTemplate;
+
+    public void setReloadIntervalMinutes(int reloadIntervalMinutes) {
+        this.reloadIntervalMinutes = reloadIntervalMinutes;
+    }
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,8 +43,25 @@ public abstract class AbstractService extends Reloadable {
         this.transactionTemplate = transactionTemplate;
     }
 
-    @Override
-    protected void doReload() {}
+    protected synchronized void reload() {
+        if (!isOutOfDate()) return;
+
+        try {
+            doReload();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lastReloadTime = new Date();
+        }
+    }
+
+    protected boolean isOutOfDate() {
+        return lastReloadTime == null || lastReloadTime.before(new Date(new Date().getTime() - reloadIntervalMinutes * 60 * 1000));
+    }
+
+    protected void doReload() {
+
+    }
 
     public int queryInt(String sql) {
         return queryInt(sql, null);

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-mvn -U -pl util,api,deal,webapp clean install
+mvn -U -pl core,webapp,webapp-deal clean install

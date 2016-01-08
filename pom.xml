@@ -6,16 +6,15 @@
 
     <groupId>cn.momia</groupId>
     <artifactId>common</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <packaging>pom</packaging>
 
     <name>Momia Common</name>
     <url>http://www.momia.cn</url>
 
     <modules>
-        <module>util</module>
-        <module>api</module>
-        <module>deal</module>
+        <module>core</module>
         <module>webapp</module>
+        <module>webapp-deal</module>
     </modules>
 </project>
