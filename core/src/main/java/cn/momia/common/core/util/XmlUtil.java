@@ -30,7 +30,7 @@ public class XmlUtil {
 
         try {
             SAXReader saxReader = new SAXReader();
-            Document doc = saxReader.read(new ByteArrayInputStream(xml.getBytes()));
+            Document doc = saxReader.read(new ByteArrayInputStream(xml.trim().getBytes()));
             List<Element> elements = doc.getRootElement().elements();
             for (Element element : elements) {
                 String name = element.getName();
