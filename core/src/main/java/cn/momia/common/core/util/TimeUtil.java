@@ -115,4 +115,12 @@ public class TimeUtil {
         if (addMonth != curMonth || addDay != curDay) return MONTH_DATE_FORMAT.format(addTime);
         return TIME_FORMAT.format(addTime);
     }
+
+    public static String calcLower(Date now, int days) {
+        return SHORT_DATE_FORMAT.format(new Date(now.getTime() + (days + 1L) * 24 * 60 * 60 * 1000));
+    }
+
+    public static String calcUpper(Date now, int days) {
+        return SHORT_DATE_FORMAT.format(new Date(now.getTime() + (days + 2L) * 24 * 60 * 60 * 1000));
+    }
 }
