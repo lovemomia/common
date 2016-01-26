@@ -102,6 +102,10 @@ public abstract class AbstractService {
         return results.isEmpty() ? defaultValue : results.get(0);
     }
 
+    public List<String> queryStringList(String sql) {
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+
     public List<String> queryStringList(String sql, Object[] args) {
         return jdbcTemplate.queryForList(sql, args, String.class);
     }
