@@ -49,7 +49,7 @@ public abstract class AbstractService {
         try {
             doReload();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("reload exception", e);
         } finally {
             lastReloadTime = new Date();
         }
