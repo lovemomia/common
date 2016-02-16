@@ -1,5 +1,6 @@
 package cn.momia.common.core.util;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -9,15 +10,37 @@ import org.dom4j.io.SAXReader;
 import org.jsoup.helper.StringUtil;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public class MomiaUtil {
+    private static final Splitter COMMA_SPLITTER = Splitter.on(",").trimResults().omitEmptyStrings();
     private static final Pattern MOBILE_PATTERN = Pattern.compile("^1[0-9]{10}$");
     private static final Set<String> SEX = Sets.newHashSet("男", "女");
+
+    public static Collection<Integer> splitIntegers(String str) {
+        List<Integer> result = new ArrayList<Integer>();
+        for (String val : COMMA_SPLITTER.split(str)) {
+            result.add(Integer.valueOf(val));
+        }
+
+        return result;
+    }
+
+    public static Collection<Integer> splitDistinctIntegers(String str) {
+        Set<Integer> result = new HashSet<Integer>();
+        for (String val : COMMA_SPLITTER.split(str)) {
+            result.add(Integer.valueOf(val));
+        }
+
+        return result;
+    }
 
     public static boolean isInvalidMobile(String mobile) {
         if (StringUtils.isBlank(mobile)) return true;
