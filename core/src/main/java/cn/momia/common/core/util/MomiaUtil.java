@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Pattern;
 
-public class MobileUtil {
+public class MomiaUtil {
     private static final Pattern MOBILE_PATTERN = Pattern.compile("^1[0-9]{10}$");
 
     public static boolean isInvalid(String mobile) {
