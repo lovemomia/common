@@ -2,8 +2,8 @@ package cn.momia.common.deal.gateway.wechatpay;
 
 import cn.momia.common.core.exception.MomiaErrorException;
 import cn.momia.common.core.platform.Platform;
+import cn.momia.common.core.util.MomiaUtil;
 import cn.momia.common.deal.gateway.PaymentGateway;
-import cn.momia.common.core.util.XmlUtil;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.deal.gateway.PrepayParam;
 import cn.momia.common.deal.gateway.PrepayResult;
@@ -80,7 +80,7 @@ public class WechatpayGateway extends PaymentGateway {
     private HttpPost createRequest(PrepayParam param) {
         HttpPost httpPost = new HttpPost(Configuration.getString("Payment.Wechat.PrepayService"));
         httpPost.addHeader(HTTP.CONTENT_TYPE, "application/xml");
-        StringEntity entity = new StringEntity(XmlUtil.mapToXml(createRequestParams(param)), "UTF-8");
+        StringEntity entity = new StringEntity(MomiaUtil.mapToXml(createRequestParams(param)), "UTF-8");
         entity.setContentType("application/xml");
         entity.setContentEncoding("UTF-8");
         httpPost.setEntity(entity);
@@ -148,7 +148,7 @@ public class WechatpayGateway extends PaymentGateway {
     }
 
     private void processResponseEntity(PrepayResult result, String entity, int platform) {
-        Map<String, String> params = XmlUtil.xmlToMap(entity);
+        Map<String, String> params = MomiaUtil.xmlToMap(entity);
         String return_code = params.get(PREPAY_REQUEST_RETURN_CODE);
         String result_code = params.get(PREPAY_REQUEST_RESULT_CODE);
 

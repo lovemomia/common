@@ -17,8 +17,8 @@ public class TimeUtil {
     public static final DateFormat STANDARD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final DateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static final DateFormat YEAR_MONTH_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    public static final DateFormat MONTH_DATE_FORMAT = new SimpleDateFormat("MM-dd");
+    public static final DateFormat YEAR_MONTH_DAY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final DateFormat MONTH_DAY_FORMAT = new SimpleDateFormat("MM-dd");
     public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
     private static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
@@ -111,8 +111,8 @@ public class TimeUtil {
         int addMonth = calendar.get(Calendar.MONTH);
         int addDay = calendar.get(Calendar.DATE);
 
-        if (addYear != curYear) return YEAR_MONTH_DATE_FORMAT.format(addTime);
-        if (addMonth != curMonth || addDay != curDay) return MONTH_DATE_FORMAT.format(addTime);
+        if (addYear != curYear) return YEAR_MONTH_DAY_FORMAT.format(addTime);
+        if (addMonth != curMonth || addDay != curDay) return MONTH_DAY_FORMAT.format(addTime);
         return TIME_FORMAT.format(addTime);
     }
 }
