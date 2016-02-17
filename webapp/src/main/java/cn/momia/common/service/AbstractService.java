@@ -100,9 +100,13 @@ public abstract class AbstractService {
         return jdbcTemplate.queryForList(sql, args, Long.class);
     }
 
-    protected String queryString(String sql, Object[] args, String defaultValue) {
+    protected String queryString(String sql) {
+        return queryString(sql, null);
+    }
+
+    protected String queryString(String sql, Object[] args) {
         List<String> results = queryStringList(sql, args);
-        return results.isEmpty() ? defaultValue : results.get(0);
+        return results.isEmpty() ? null : results.get(0);
     }
 
     protected List<String> queryStringList(String sql) {
@@ -113,9 +117,17 @@ public abstract class AbstractService {
         return jdbcTemplate.queryForList(sql, args, String.class);
     }
 
-    protected Date queryDate(String sql, Object[] args, Date defaultValue) {
+    protected Date queryDate(String sql) {
+        return queryDate(sql, null);
+    }
+
+    protected Date queryDate(String sql, Object[] args) {
         List<Date> results = queryDateList(sql, args);
-        return results.isEmpty() ? defaultValue : results.get(0);
+        return results.isEmpty() ? null : results.get(0);
+    }
+
+    protected List<Date> queryDateList(String sql) {
+        return jdbcTemplate.queryForList(sql, Date.class);
     }
 
     protected List<Date> queryDateList(String sql, Object[] args) {
