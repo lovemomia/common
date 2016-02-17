@@ -42,6 +42,24 @@ public class MomiaUtil {
         return result;
     }
 
+    public static Collection<Long> splitLongs(String str) {
+        List<Long> result = new ArrayList<Long>();
+        for (String val : COMMA_SPLITTER.split(str)) {
+            result.add(Long.valueOf(val));
+        }
+
+        return result;
+    }
+
+    public static Collection<Long> splitDistinctLongs(String str) {
+        Set<Long> result = new HashSet<Long>();
+        for (String val : COMMA_SPLITTER.split(str)) {
+            result.add(Long.valueOf(val));
+        }
+
+        return result;
+    }
+
     public static boolean isInvalidMobile(String mobile) {
         if (StringUtils.isBlank(mobile)) return true;
         return !MOBILE_PATTERN.matcher(mobile).find();
