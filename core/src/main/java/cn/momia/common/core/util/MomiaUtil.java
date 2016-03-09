@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class MomiaUtil {
+    public static final String[] CHINESE_NUMBER_CHARACTER = { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十" };
     private static final Splitter COMMA_SPLITTER = Splitter.on(",").trimResults().omitEmptyStrings();
     private static final Pattern MOBILE_PATTERN = Pattern.compile("^1[0-9]{10}$");
     private static final Set<String> SEX = Sets.newHashSet("男", "女");
