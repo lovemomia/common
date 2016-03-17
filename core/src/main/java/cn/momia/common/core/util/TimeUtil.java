@@ -12,17 +12,23 @@ public class TimeUtil {
         public static final int MONTH = 1;
         public static final int QUARTER = 2;
         public static final int YEAR = 3;
+        public static final int HALF_YEAR = 4;
     }
 
+    public static final String[] TIME_UNIT_STRING = { "月", "季度", "年", "半年" };
     public static final DateFormat STANDARD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final DateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-    public static final DateFormat YEAR_MONTH_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    public static final DateFormat MONTH_DATE_FORMAT = new SimpleDateFormat("MM-dd");
+    public static final DateFormat YEAR_MONTH_DAY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final DateFormat MONTH_DAY_FORMAT = new SimpleDateFormat("MM-dd");
     public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
     private static final String[] WEEK_DAYS = { "周日", "周一", "周二", "周三", "周四", "周五", "周六" };
     private static final String[] AM_PM = { "上午", "下午" };
+
+    public static String toUnitString(int timeUnit) {
+        return TIME_UNIT_STRING[timeUnit - 1];
+    }
 
     public static Date castToDate(String timeStr) {
         try {
@@ -94,6 +100,9 @@ public class TimeUtil {
             case TimeUnit.YEAR:
                 calendar.add(Calendar.YEAR, time);
                 break;
+            case TimeUnit.HALF_YEAR:
+                calendar.add(Calendar.MONTH, time * 6);
+                break;
             default: break;
         }
 
@@ -111,8 +120,8 @@ public class TimeUtil {
         int addMonth = calendar.get(Calendar.MONTH);
         int addDay = calendar.get(Calendar.DATE);
 
-        if (addYear != curYear) return YEAR_MONTH_DATE_FORMAT.format(addTime);
-        if (addMonth != curMonth || addDay != curDay) return MONTH_DATE_FORMAT.format(addTime);
+        if (addYear != curYear) return YEAR_MONTH_DAY_FORMAT.format(addTime);
+        if (addMonth != curMonth || addDay != curDay) return MONTH_DAY_FORMAT.format(addTime);
         return TIME_FORMAT.format(addTime);
     }
 }

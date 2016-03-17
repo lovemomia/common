@@ -1,5 +1,6 @@
 package cn.momia.common.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,11 +11,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -63,76 +66,88 @@ public abstract class AbstractService {
 
     }
 
-    public int queryInt(String sql) {
+    protected int queryInt(String sql) {
         return queryInt(sql, null);
     }
 
-    public int queryInt(String sql, Object[] args) {
+    protected int queryInt(String sql, Object[] args) {
         List<Integer> results = queryIntList(sql, args);
         return results.isEmpty() ? 0 : results.get(0);
     }
 
-    public List<Integer> queryIntList(String sql) {
+    protected List<Integer> queryIntList(String sql) {
         return jdbcTemplate.queryForList(sql, Integer.class);
     }
 
-    public List<Integer> queryIntList(String sql, Object[] args) {
+    protected List<Integer> queryIntList(String sql, Object[] args) {
         return jdbcTemplate.queryForList(sql, args, Integer.class);
     }
 
-    public long queryLong(String sql) {
+    protected long queryLong(String sql) {
         return queryLong(sql, null);
     }
 
-    public long queryLong(String sql, Object[] args) {
+    protected long queryLong(String sql, Object[] args) {
         List<Long> results = queryLongList(sql, args);
         return results.isEmpty() ? 0 : results.get(0);
     }
 
-    public List<Long> queryLongList(String sql) {
+    protected List<Long> queryLongList(String sql) {
         return jdbcTemplate.queryForList(sql, Long.class);
     }
 
-    public List<Long> queryLongList(String sql, Object[] args) {
+    protected List<Long> queryLongList(String sql, Object[] args) {
         return jdbcTemplate.queryForList(sql, args, Long.class);
     }
 
-    public String queryString(String sql, Object[] args, String defaultValue) {
-        List<String> results = queryStringList(sql, args);
-        return results.isEmpty() ? defaultValue : results.get(0);
+    protected String queryString(String sql) {
+        return queryString(sql, null);
     }
 
-    public List<String> queryStringList(String sql) {
+    protected String queryString(String sql, Object[] args) {
+        List<String> results = queryStringList(sql, args);
+        return results.isEmpty() ? null : results.get(0);
+    }
+
+    protected List<String> queryStringList(String sql) {
         return jdbcTemplate.queryForList(sql, String.class);
     }
 
-    public List<String> queryStringList(String sql, Object[] args) {
+    protected List<String> queryStringList(String sql, Object[] args) {
         return jdbcTemplate.queryForList(sql, args, String.class);
     }
 
-    public Date queryDate(String sql, Object[] args, Date defaultValue) {
-        List<Date> results = queryDateList(sql, args);
-        return results.isEmpty() ? defaultValue : results.get(0);
+    protected Date queryDate(String sql) {
+        return queryDate(sql, null);
     }
 
-    public List<Date> queryDateList(String sql, Object[] args) {
+    protected Date queryDate(String sql, Object[] args) {
+        List<Date> results = queryDateList(sql, args);
+        return results.isEmpty() ? null : results.get(0);
+    }
+
+    protected List<Date> queryDateList(String sql) {
+        return jdbcTemplate.queryForList(sql, Date.class);
+    }
+
+    protected List<Date> queryDateList(String sql, Object[] args) {
         return jdbcTemplate.queryForList(sql, args, Date.class);
     }
 
-    public <T> T queryObject(String sql, Class<T> clazz, T defaultValue) {
+    protected <T> T queryObject(String sql, Class<T> clazz, T defaultValue) {
         return queryObject(sql, null, clazz, defaultValue);
     }
 
-    public <T> T queryObject(String sql, Object[] args, Class<T> clazz, T defaultValue) {
+    protected <T> T queryObject(String sql, Object[] args, Class<T> clazz, T defaultValue) {
         List<T> objects = queryObjectList(sql, args, clazz);
         return objects.isEmpty() ? defaultValue : objects.get(0);
     }
 
-    public <K, V> Map<K, V> queryMap(String sql, Class<K> keyClass, Class<V> valueClass) {
+    protected <K, V> Map<K, V> queryMap(String sql, Class<K> keyClass, Class<V> valueClass) {
         return queryMap(sql, null, keyClass, valueClass);
     }
 
-    public <K, V> Map<K, V> queryMap(String sql, Object[] args, final Class<K> keyClass, final Class<V> valueClass) {
+    protected <K, V> Map<K, V> queryMap(String sql, Object[] args, final Class<K> keyClass, final Class<V> valueClass) {
         final Map<K, V> map = new HashMap<K, V>();
         jdbcTemplate.query(sql, args, new RowCallbackHandler() {
             @Override
@@ -144,11 +159,11 @@ public abstract class AbstractService {
         return map;
     }
 
-    public <K, V> Map<K, List<V>> queryListMap(String sql, Class<K> keyClass, Class<V> valueClass) {
+    protected <K, V> Map<K, List<V>> queryListMap(String sql, Class<K> keyClass, Class<V> valueClass) {
         return queryListMap(sql, null, keyClass, valueClass);
     }
 
-    public <K, V> Map<K, List<V>> queryListMap(String sql, Object[] args, final Class<K> keyClass, final Class<V> valueClass) {
+    protected <K, V> Map<K, List<V>> queryListMap(String sql, Object[] args, final Class<K> keyClass, final Class<V> valueClass) {
         final Map<K, List<V>> map = new HashMap<K, List<V>>();
         jdbcTemplate.query(sql, args, new RowCallbackHandler() {
             @Override
@@ -167,11 +182,11 @@ public abstract class AbstractService {
         return map;
     }
 
-    public <T> List<T> queryObjectList(String sql, Class<T> clazz) {
+    protected <T> List<T> queryObjectList(String sql, Class<T> clazz) {
         return queryObjectList(sql, null, clazz);
     }
 
-    public <T> List<T> queryObjectList(String sql, Object[] args, Class<T> clazz) {
+    protected <T> List<T> queryObjectList(String sql, Object[] args, Class<T> clazz) {
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, args);
         List<T> list = new ArrayList<T>();
         for (Map<String, Object> row : rows) {
@@ -232,6 +247,32 @@ public abstract class AbstractService {
 
     protected void query(String sql, Object[] args, RowCallbackHandler handler) {
         jdbcTemplate.query(sql, args, handler);
+    }
+
+    protected <K, V> List<V> listByIds(String sql, Collection<K> ids, Class<K> keyClass, Class<V> valueClazz) {
+        if (ids.isEmpty()) return new ArrayList<V>();
+
+        try {
+            sql = String.format(sql, StringUtils.join(ids, ","));
+            List<V> values = queryObjectList(sql, valueClazz);
+
+            Map<K, V> valuesMap = new HashMap<K, V>();
+            PropertyDescriptor propertyDescriptor = new PropertyDescriptor("id", valueClazz);
+            for (V value : values) {
+                valuesMap.put(keyClass.cast(propertyDescriptor.getReadMethod().invoke(value)), value);
+            }
+
+            List<V> result = new ArrayList<V>();
+            for (K id : ids) {
+                V value = valuesMap.get(id);
+                if (value != null) result.add(value);
+            }
+
+            return result;
+        } catch (Exception e) {
+            LOGGER.error("fail to execute sql: {}", sql, e);
+            return new ArrayList<V>();
+        }
     }
 
     protected KeyHolder insert(PreparedStatementCreator psc) {
