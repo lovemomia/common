@@ -23,7 +23,7 @@ public class AlipayGateway extends PaymentGateway {
         result.add(AlipayPrepayResult.Field.INPUT_CHARSET, "utf-8");
         result.add(AlipayPrepayResult.Field.SIGN_TYPE, "RSA");
         result.add(AlipayPrepayResult.Field.NOTIFY_URL, Configuration.getString("Payment.Ali.NotifyUrl"));
-        result.add(AlipayPrepayResult.Field.OUT_TRADE_NO, String.valueOf(param.getOrderId()));
+        result.add(AlipayPrepayResult.Field.OUT_TRADE_NO, param.getOutTradeNo());
         result.add(AlipayPrepayResult.Field.SUBJECT, param.getProductTitle());
         result.add(AlipayPrepayResult.Field.PAYMENT_TYPE, "1");
         result.add(AlipayPrepayResult.Field.SELLER_ID, Configuration.getString("Payment.Ali.Partner"));

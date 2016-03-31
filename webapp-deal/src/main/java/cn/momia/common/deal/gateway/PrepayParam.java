@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class PrepayParam extends MapWrapper {
     private int platform;
 
-    private long orderId;
+    private String outTradeNo;
     private long productId;
     private String productTitle;
     private String productUrl;
@@ -21,12 +21,12 @@ public class PrepayParam extends MapWrapper {
         this.platform = platform;
     }
 
-    public long getOrderId() {
-        return orderId;
+    public String getOutTradeNo() {
+        return outTradeNo;
     }
 
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
     }
 
     public long getProductId() {
