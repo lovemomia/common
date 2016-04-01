@@ -64,7 +64,7 @@ public class AlipayCallbackParam extends MapWrapper implements CallbackParam {
 
     @Override
     public long getOrderId() {
-        return Long.valueOf(get(Field.OUT_TRADE_NO));
+        return Long.valueOf(get(Field.OUT_TRADE_NO).substring(3));
     }
 
     @Override

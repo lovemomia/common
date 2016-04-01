@@ -108,7 +108,7 @@ public class WechatpayGateway extends PaymentGateway {
 
         requestParams.put(PrepayRequestField.NONCE_STR, WechatpayUtil.createNoncestr(32));
         requestParams.put(PrepayRequestField.BODY, param.getProductTitle());
-        requestParams.put(PrepayRequestField.OUT_TRADE_NO, param.getOrderId() + DATE_FORMATTER.format(new Date()));
+        requestParams.put(PrepayRequestField.OUT_TRADE_NO, param.getOutTradeNo() + DATE_FORMATTER.format(new Date()));
         requestParams.put(PrepayRequestField.TOTAL_FEE, String.valueOf(param.getTotalFee()));
         requestParams.put(PrepayRequestField.SPBILL_CREATE_IP, param.get("userIp"));
         requestParams.put(PrepayRequestField.NOTIFY_URL, Configuration.getString("Payment.Wechat.NotifyUrl"));

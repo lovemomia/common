@@ -62,7 +62,7 @@ public class WechatpayCallbackParam extends MapWrapper implements CallbackParam 
     @Override
     public long getOrderId() {
         String outTradeNo = get(Field.OUT_TRADE_NO);
-        return Long.valueOf(outTradeNo.substring(0, outTradeNo.length() - DATE_FORMAT_STR.length()));
+        return Long.valueOf(outTradeNo.substring(3, outTradeNo.length() - DATE_FORMAT_STR.length()));
     }
 
     @Override
