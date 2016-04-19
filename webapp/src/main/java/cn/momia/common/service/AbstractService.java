@@ -294,7 +294,7 @@ public abstract class AbstractService {
         return jdbcTemplate.batchUpdate(sql, argsList);
     }
 
-    protected void execute(TransactionCallback callback) {
-        transactionTemplate.execute(callback);
+    protected Object execute(TransactionCallback callback) {
+        return transactionTemplate.execute(callback);
     }
 }
