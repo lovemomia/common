@@ -1,6 +1,9 @@
 package cn.momia.common.deal.gateway.alipay;
 
 import cn.momia.common.deal.gateway.PaymentGateway;
+import cn.momia.common.deal.gateway.RefundNotifyParam;
+import cn.momia.common.deal.gateway.RefundParam;
+import cn.momia.common.deal.gateway.RefundQueryParam;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.deal.gateway.PrepayResult;
 import cn.momia.common.core.platform.Platform;
@@ -36,5 +39,20 @@ public class AlipayGateway extends PaymentGateway {
         result.setSuccessful(!StringUtils.isBlank(result.get(AlipayPrepayResult.Field.SIGN)));
 
         return result;
+    }
+
+    @Override
+    public boolean refund(RefundParam param) {
+        return false;
+    }
+
+    @Override
+    public boolean refundNotify(RefundNotifyParam param) {
+        return false;
+    }
+
+    @Override
+    public boolean refundQuery(RefundQueryParam param) {
+        throw new RuntimeException("暂不支持");
     }
 }
