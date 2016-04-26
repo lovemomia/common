@@ -4,7 +4,6 @@ import cn.momia.common.core.exception.MomiaErrorException;
 import cn.momia.common.core.platform.Platform;
 import cn.momia.common.core.util.MomiaUtil;
 import cn.momia.common.deal.gateway.PaymentGateway;
-import cn.momia.common.deal.gateway.RefundNotifyParam;
 import cn.momia.common.deal.gateway.RefundParam;
 import cn.momia.common.deal.gateway.RefundQueryParam;
 import cn.momia.common.webapp.config.Configuration;
@@ -242,11 +241,6 @@ public class WechatpayGateway extends PaymentGateway {
         requestParams.put(RefundRequestField.SIGN, WechatpayUtil.sign(requestParams, Platform.WAP));
 
         return requestParams;
-    }
-
-    @Override
-    public boolean refundNotify(RefundNotifyParam param) {
-        throw new RuntimeException("暂不支持");
     }
 
     @Override

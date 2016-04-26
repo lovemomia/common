@@ -10,6 +10,10 @@ public abstract class PaymentGateway {
     }
 
     public abstract boolean refund(RefundParam param);
-    public abstract boolean refundNotify(RefundNotifyParam param, Function<RefundNotifyParam, Boolean> callback);
+
+    public boolean refundNotify(RefundNotifyParam param, Function<RefundNotifyParam, Boolean> callback) {
+        return callback.apply(param);
+    }
+
     public abstract boolean refundQuery(RefundQueryParam param);
 }

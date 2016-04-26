@@ -1,9 +1,7 @@
 package cn.momia.common.deal.gateway.alipay;
 
-import cn.momia.common.core.exception.MomiaErrorException;
 import cn.momia.common.core.util.TimeUtil;
 import cn.momia.common.deal.gateway.PaymentGateway;
-import cn.momia.common.deal.gateway.RefundNotifyParam;
 import cn.momia.common.deal.gateway.RefundParam;
 import cn.momia.common.deal.gateway.RefundQueryParam;
 import cn.momia.common.webapp.config.Configuration;
@@ -89,11 +87,6 @@ public class AlipayGateway extends PaymentGateway {
             LOGGER.error("refund error", e);
         }
 
-        return false;
-    }
-
-    @Override
-    public boolean refundNotify(RefundNotifyParam param) {
         return false;
     }
 
