@@ -17,6 +17,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +75,7 @@ public class AlipayGateway extends PaymentGateway {
         try {
             List<String> kvs = new ArrayList<String>();
             for (Map.Entry<String, String> entry : requestParams.entrySet()) {
-                kvs.add(entry.getKey() + "=" + entry.getValue());
+                kvs.add(entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), "utf-8"));
             }
 
             String refundUrl = Configuration.getString("Payment.Ali.RefundUrl") + "?" + StringUtils.join(kvs, "&");
