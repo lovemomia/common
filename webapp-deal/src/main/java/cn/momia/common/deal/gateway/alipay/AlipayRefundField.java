@@ -12,4 +12,7 @@ public class AlipayRefundField {
     public static final String BATCH_NO = "batch_no";
     public static final String BATCH_NUM = "batch_num";
     public static final String DETAIL_DATA = "detail_data";
+
+    public static final String NOTIFY_ID = "notify_id";
+    public static final String SUCCESS_NUM = "success_num";
 }
