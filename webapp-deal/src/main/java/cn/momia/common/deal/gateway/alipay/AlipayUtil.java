@@ -36,7 +36,7 @@ public class AlipayUtil {
         try {
             return URLEncoder.encode(RSA.sign(StringUtils.join(kvs, "&"), Configuration.getString("Payment.Ali.PrivateKey"), "utf-8"), "utf-8");
         } catch (UnsupportedEncodingException e) {
-            throw new MomiaErrorException("签名错误");
+            throw new MomiaErrorException("签名失败");
         }
     }
 
@@ -51,5 +51,20 @@ public class AlipayUtil {
         Collections.sort(kvs);
 
         return RSA.verify(StringUtils.join(kvs, "&"), sign, Configuration.getString("Payment.Ali.PublicKey"), "utf-8");
+    }
+
+    public static String refundSign(Map<String, String> params) {
+        List<String> kvs = new ArrayList<String>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            String key = entry.getKey();
+            if (!AlipayRefundField.SIGN_TYPE.equalsIgnoreCase(key)) kvs.add(key + "=" + entry.getValue());
+        }
+        Collections.sort(kvs);
+
+        try {
+            return URLEncoder.encode(RSA.sign(StringUtils.join(kvs, "&"), Configuration.getString("Payment.Ali.PrivateKey"), "utf-8"), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new MomiaErrorException("签名失败");
+        }
     }
 }

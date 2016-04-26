@@ -230,27 +230,16 @@ public class WechatpayGateway extends PaymentGateway {
     private Map<String, String> createRefundRequestParams(RefundParam param) {
         Map<String, String> requestParams = new HashMap<String, String>();
 
-        int platform = param.getPlatform();
-        switch (platform) {
-            case Platform.APP:
-                requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.AppAppId"));
-                requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.AppMchId"));
-                requestParams.put(RefundRequestField.OP_USER_ID, Configuration.getString("Payment.Wechat.AppMchId"));
-                break;
-            case Platform.WAP:
-                requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
-                requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
-                requestParams.put(RefundRequestField.OP_USER_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
-                break;
-            default: new MomiaErrorException("not supported platform type: " + platform);
-        }
+        requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
+        requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
+        requestParams.put(RefundRequestField.OP_USER_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
 
         requestParams.put(RefundRequestField.NONCE_STR, WechatpayUtil.createNoncestr(32));
         requestParams.put(RefundRequestField.TRANSACTION_ID, param.getTradeNo());
         requestParams.put(RefundRequestField.OUT_REFUND_NO, String.valueOf(param.getRefundId()));
         requestParams.put(RefundRequestField.TOTAL_FEE, String.valueOf(param.getTotalFee()));
         requestParams.put(RefundRequestField.REFUND_FEE, String.valueOf(param.getRefundFee()));
-        requestParams.put(RefundRequestField.SIGN, WechatpayUtil.sign(requestParams, platform));
+        requestParams.put(RefundRequestField.SIGN, WechatpayUtil.sign(requestParams, Platform.WAP));
 
         return requestParams;
     }
