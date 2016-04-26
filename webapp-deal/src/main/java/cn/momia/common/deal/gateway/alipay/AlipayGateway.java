@@ -1,5 +1,6 @@
 package cn.momia.common.deal.gateway.alipay;
 
+import cn.momia.common.core.util.MomiaUtil;
 import cn.momia.common.core.util.TimeUtil;
 import cn.momia.common.deal.gateway.PaymentGateway;
 import cn.momia.common.deal.gateway.RefundParam;
@@ -14,6 +15,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,10 +82,16 @@ public class AlipayGateway extends PaymentGateway {
 
             String refundUrl = Configuration.getString("Payment.Ali.RefundUrl") + "?" + StringUtils.join(kvs, "&");
 
+            LOGGER.info("{}", refundUrl);
+
             HttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(refundUrl);
             HttpResponse response = httpClient.execute(request);
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return true;
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                String entity = EntityUtils.toString(response.getEntity());
+                Map<String, String> map = MomiaUtil.xmlToMap(entity);
+                return "T".equals(map.get("is_success"));
+            }
         } catch (Exception e) {
             LOGGER.error("refund error", e);
         }
