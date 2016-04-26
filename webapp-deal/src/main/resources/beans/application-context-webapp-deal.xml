@@ -12,6 +12,12 @@
     <bean id="wechatpay" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
         <property name="staticField" value="cn.momia.common.deal.gateway.PayType.WEIXIN" />
     </bean>
+    <bean id="wechatpayapp" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField" value="cn.momia.common.deal.gateway.PayType.WEIXIN_APP" />
+    </bean>
+    <bean id="wechatpayjsapi" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField" value="cn.momia.common.deal.gateway.PayType.WEIXIN_JSAPI" />
+    </bean>
     <bean id="wechatpayGateway" class="cn.momia.common.deal.gateway.wechatpay.WechatpayGateway" />
 
     <bean class="cn.momia.common.deal.gateway.factory.PaymentGatewayFactory">
@@ -21,6 +27,12 @@
                     <ref bean="alipayGateway" />
                 </entry>
                 <entry key-ref="wechatpay">
+                    <ref bean="wechatpayGateway" />
+                </entry>
+                <entry key-ref="wechatpayapp">
+                    <ref bean="wechatpayGateway" />
+                </entry>
+                <entry key-ref="wechatpayjsapi">
                     <ref bean="wechatpayGateway" />
                 </entry>
             </map>
