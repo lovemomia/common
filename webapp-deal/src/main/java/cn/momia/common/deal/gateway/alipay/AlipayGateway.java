@@ -82,7 +82,7 @@ public class AlipayGateway extends PaymentGateway {
 
             String refundUrl = Configuration.getString("Payment.Ali.RefundUrl") + "?" + StringUtils.join(kvs, "&");
 
-            LOGGER.info("{}", refundUrl);
+            LOGGER.debug("{}", refundUrl);
 
             HttpClient httpClient = HttpClients.createDefault();
             HttpGet request = new HttpGet(refundUrl);

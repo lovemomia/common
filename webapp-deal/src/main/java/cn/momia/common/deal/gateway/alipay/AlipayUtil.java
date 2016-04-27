@@ -81,11 +81,6 @@ public class AlipayUtil {
             if (!AlipayRefundField.SIGN_TYPE.equalsIgnoreCase(key)) kvs.add(key + "=" + entry.getValue());
         }
         Collections.sort(kvs);
-
-        try {
-            return URLEncoder.encode(RSA.sign(StringUtils.join(kvs, "&"), Configuration.getString("Payment.Ali.PrivateKey"), "utf-8"), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new MomiaErrorException("签名失败");
-        }
+        return RSA.sign(StringUtils.join(kvs, "&"), Configuration.getString("Payment.Ali.PrivateKey"), "utf-8");
     }
 }
