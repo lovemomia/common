@@ -207,7 +207,14 @@ public class WechatpayGateway extends PaymentGateway {
             Map<String, String> resultMap = MomiaUtil.xmlToMap(entity);
 
             String return_code = resultMap.get("return_code");
-            if (SUCCESS.equals(return_code)) return true;
+            String result_code = resultMap.get("result_code");
+
+            boolean successful = return_code != null && return_code.equalsIgnoreCase(SUCCESS) && result_code != null && result_code.equalsIgnoreCase(SUCCESS);
+            if (successful) {
+                if (!WechatpayUtil.validateSign(resultMap, Platform.WAP)) throw new MomiaErrorException("fail to refund, invalid sign");
+            }
+
+            return successful;
         } catch (Exception e) {
             LOGGER.error("fail to refund", e);
         }
@@ -245,6 +252,53 @@ public class WechatpayGateway extends PaymentGateway {
 
     @Override
     public boolean refundQuery(RefundQueryParam param) {
+        try {
+            HttpClient httpClient = HttpClients.createDefault();
+            HttpPost request = createRefundQueryRequest(param);
+            HttpResponse response = httpClient.execute(request);
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaErrorException("fail to execute request: " + request);
+
+            String entity = EntityUtils.toString(response.getEntity(), "UTF-8");
+            Map<String, String> resultMap = MomiaUtil.xmlToMap(entity);
+
+            String return_code = resultMap.get("return_code");
+            String result_code = resultMap.get("result_code");
+
+            boolean successful = return_code != null && return_code.equalsIgnoreCase(SUCCESS) && result_code != null && result_code.equalsIgnoreCase(SUCCESS);
+            if (successful) {
+                if (!WechatpayUtil.validateSign(resultMap, Platform.WAP)) throw new MomiaErrorException("fail to refund, invalid sign");
+
+                String refund_status_0 = resultMap.get("refund_status_0");
+                return refund_status_0 != null && refund_status_0.equalsIgnoreCase(SUCCESS);
+            }
+        } catch (Exception e) {
+            LOGGER.error("fail to refund", e);
+        }
+
         return false;
+    }
+
+    private HttpPost createRefundQueryRequest(RefundQueryParam param) {
+        HttpPost httpPost = new HttpPost(Configuration.getString("Payment.Wechat.RefundQueryService"));
+        httpPost.addHeader(HTTP.CONTENT_TYPE, "application/xml");
+        StringEntity entity = new StringEntity(MomiaUtil.mapToXml(createRefundQueryRequestParams(param)), "UTF-8");
+        entity.setContentType("application/xml");
+        entity.setContentEncoding("UTF-8");
+        httpPost.setEntity(entity);
+
+        return httpPost;
+    }
+
+    private Map<String, String> createRefundQueryRequestParams(RefundQueryParam param) {
+        Map<String, String> requestParams = new HashMap<String, String>();
+
+        requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
+        requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
+
+        requestParams.put(RefundRequestField.NONCE_STR, WechatpayUtil.createNoncestr(32));
+        requestParams.put(RefundRequestField.TRANSACTION_ID, param.getTradeNo());
+        requestParams.put(RefundRequestField.SIGN, WechatpayUtil.sign(requestParams, Platform.WAP));
+
+        return requestParams;
     }
 }
