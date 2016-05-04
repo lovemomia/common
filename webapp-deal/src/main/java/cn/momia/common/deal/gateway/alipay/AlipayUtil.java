@@ -4,7 +4,14 @@ import cn.momia.common.core.exception.MomiaErrorException;
 import cn.momia.common.webapp.config.Configuration;
 import cn.momia.common.core.platform.Platform;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -13,6 +20,20 @@ import java.util.List;
 import java.util.Map;
 
 public class AlipayUtil {
+    public static boolean verifyResponse(String notifyId) throws IOException {
+        String partner = Configuration.getString("Payment.Ali.Partner");
+        String verifyUrl = Configuration.getString("Payment.Ali.VerifyUrl") + "partner=" + partner + "&notify_id=" + notifyId;
+
+        HttpClient httpClient = HttpClients.createDefault();
+        HttpGet request = new HttpGet(verifyUrl);
+        HttpResponse response = httpClient.execute(request);
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaErrorException("fail to execute request: " + request);
+
+        String entity = EntityUtils.toString(response.getEntity());
+
+        return Boolean.valueOf(entity);
+    }
+
     public static String sign(Map<String, String> params, int platform) {
         List<String> kvs = new ArrayList<String>();
         String quote = Platform.isApp(platform) ? "\"" : "";
@@ -36,7 +57,7 @@ public class AlipayUtil {
         try {
             return URLEncoder.encode(RSA.sign(StringUtils.join(kvs, "&"), Configuration.getString("Payment.Ali.PrivateKey"), "utf-8"), "utf-8");
         } catch (UnsupportedEncodingException e) {
-            throw new MomiaErrorException("签名错误");
+            throw new MomiaErrorException("签名失败");
         }
     }
 
@@ -51,5 +72,15 @@ public class AlipayUtil {
         Collections.sort(kvs);
 
         return RSA.verify(StringUtils.join(kvs, "&"), sign, Configuration.getString("Payment.Ali.PublicKey"), "utf-8");
+    }
+
+    public static String refundSign(Map<String, String> params) {
+        List<String> kvs = new ArrayList<String>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            String key = entry.getKey();
+            if (!AlipayRefundField.SIGN_TYPE.equalsIgnoreCase(key)) kvs.add(key + "=" + entry.getValue());
+        }
+        Collections.sort(kvs);
+        return RSA.sign(StringUtils.join(kvs, "&"), Configuration.getString("Payment.Ali.PrivateKey"), "utf-8");
     }
 }

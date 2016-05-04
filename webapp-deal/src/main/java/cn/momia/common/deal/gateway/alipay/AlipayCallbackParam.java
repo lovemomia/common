@@ -40,26 +40,12 @@ public class AlipayCallbackParam extends MapWrapper implements CallbackParam {
             if (!"TRADE_SUCCESS".equalsIgnoreCase(get(Field.TRADE_STATUS))) return false;
 
             String notifyId = get(Field.NOTIFY_ID);
-            if (notifyId == null || !verifyResponse(notifyId)) return false;
+            if (notifyId == null || !AlipayUtil.verifyResponse(notifyId)) return false;
 
             return AlipayUtil.validateSign(getAll(), get(Field.SIGN));
         } catch (Exception e) {
             return false;
         }
-    }
-
-    private boolean verifyResponse(String notifyId) throws IOException {
-        String partner = Configuration.getString("Payment.Ali.Partner");
-        String verifyUrl = Configuration.getString("Payment.Ali.VerifyUrl") + "partner=" + partner + "&notify_id=" + notifyId;
-
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpGet request = new HttpGet(verifyUrl);
-        HttpResponse response = httpClient.execute(request);
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaErrorException("fail to execute request: " + request);
-
-        String entity = EntityUtils.toString(response.getEntity());
-
-        return Boolean.valueOf(entity);
     }
 
     @Override

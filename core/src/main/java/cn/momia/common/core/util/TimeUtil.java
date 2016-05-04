@@ -18,6 +18,7 @@ public class TimeUtil {
     public static final String[] TIME_UNIT_STRING = { "月", "季度", "年", "半年" };
     public static final DateFormat STANDARD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final DateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public static final DateFormat TIGHT_SHORT_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     public static final DateFormat YEAR_MONTH_DAY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     public static final DateFormat MONTH_DAY_FORMAT = new SimpleDateFormat("MM-dd");
