@@ -335,8 +335,17 @@ public class WechatpayGateway extends PaymentGateway {
     private Map<String, String> createRefundQueryRequestParams(RefundQueryParam param) {
         Map<String, String> requestParams = new HashMap<String, String>();
 
-        requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
-        requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
+        switch (param.getPayType()) {
+            case PayType.WEIXIN_APP:
+                requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.AppAppId"));
+                requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.AppMchId"));
+                break;
+            case PayType.WEIXIN_JSAPI:
+                requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
+                requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
+                break;
+            default: throw new MomiaErrorException("无效的支付类型: " + param.getPayType());
+        }
 
         requestParams.put(RefundRequestField.NONCE_STR, WechatpayUtil.createNoncestr(32));
         requestParams.put(RefundRequestField.TRANSACTION_ID, param.getTradeNo());
