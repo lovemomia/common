@@ -236,6 +236,8 @@ public class WechatpayGateway extends PaymentGateway {
             String result_code = resultMap.get("result_code");
 
             boolean successful = return_code != null && return_code.equalsIgnoreCase(SUCCESS) && result_code != null && result_code.equalsIgnoreCase(SUCCESS);
+            LOGGER.info("weixin refund return_code/result_code/return_msg: {}/{}/{}", new Object[] { return_code, result_code, resultMap.get("return_msg") });
+
             if (successful) {
                 if (!WechatpayUtil.validateSign(resultMap, Platform.WAP)) throw new MomiaErrorException("fail to refund, invalid sign");
             }
