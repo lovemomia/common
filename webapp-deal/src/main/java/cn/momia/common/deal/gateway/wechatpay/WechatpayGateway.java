@@ -208,14 +208,14 @@ public class WechatpayGateway extends PaymentGateway {
             KeyStore keyStore  = KeyStore.getInstance("PKCS12");
             FileInputStream instream = new FileInputStream(new File("/data/appdatas/weixin/" + (param.getPayType() == PayType.WEIXIN_JSAPI ? "js_cert.p12" : "app_cert.p12")));
             try {
-                keyStore.load(instream, Configuration.getString("Payment.Wechat.JsApiMchId").toCharArray());
+                keyStore.load(instream, (param.getPayType() == PayType.WEIXIN_JSAPI ? Configuration.getString("Payment.Wechat.JsApiMchId") : Configuration.getString("Payment.Wechat.AppMchId")).toCharArray());
             } finally {
                 instream.close();
             }
 
             // Trust own CA and all self-signed certs
             SSLContext sslcontext = SSLContexts.custom()
-                    .loadKeyMaterial(keyStore, Configuration.getString("Payment.Wechat.JsApiMchId").toCharArray())
+                    .loadKeyMaterial(keyStore, (param.getPayType() == PayType.WEIXIN_JSAPI ? Configuration.getString("Payment.Wechat.JsApiMchId") : Configuration.getString("Payment.Wechat.AppMchId")).toCharArray())
                     .build();
             // Allow TLSv1 protocol only
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
