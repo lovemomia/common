@@ -288,7 +288,7 @@ public class WechatpayGateway extends PaymentGateway {
         requestParams.put(RefundRequestField.OUT_REFUND_NO, String.valueOf(param.getRefundId()));
         requestParams.put(RefundRequestField.TOTAL_FEE, String.valueOf(param.getTotalFee()));
         requestParams.put(RefundRequestField.REFUND_FEE, String.valueOf(param.getRefundFee()));
-        requestParams.put(RefundRequestField.SIGN, WechatpayUtil.sign(requestParams, Platform.WAP));
+        requestParams.put(RefundRequestField.SIGN, WechatpayUtil.sign(requestParams, param.getPayType() == PayType.WEIXIN_JSAPI ? Platform.WAP : Platform.APP));
 
         return requestParams;
     }
@@ -349,7 +349,7 @@ public class WechatpayGateway extends PaymentGateway {
 
         requestParams.put(RefundRequestField.NONCE_STR, WechatpayUtil.createNoncestr(32));
         requestParams.put(RefundRequestField.TRANSACTION_ID, param.getTradeNo());
-        requestParams.put(RefundRequestField.SIGN, WechatpayUtil.sign(requestParams, Platform.WAP));
+        requestParams.put(RefundRequestField.SIGN, WechatpayUtil.sign(requestParams, param.getPayType() == PayType.WEIXIN_JSAPI ? Platform.WAP : Platform.APP));
 
         return requestParams;
     }
