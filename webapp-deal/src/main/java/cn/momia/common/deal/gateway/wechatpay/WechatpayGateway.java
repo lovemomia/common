@@ -3,6 +3,7 @@ package cn.momia.common.deal.gateway.wechatpay;
 import cn.momia.common.core.exception.MomiaErrorException;
 import cn.momia.common.core.platform.Platform;
 import cn.momia.common.core.util.MomiaUtil;
+import cn.momia.common.deal.gateway.PayType;
 import cn.momia.common.deal.gateway.PaymentGateway;
 import cn.momia.common.deal.gateway.RefundParam;
 import cn.momia.common.deal.gateway.RefundQueryParam;
@@ -238,6 +239,10 @@ public class WechatpayGateway extends PaymentGateway {
             boolean successful = return_code != null && return_code.equalsIgnoreCase(SUCCESS) && result_code != null && result_code.equalsIgnoreCase(SUCCESS);
             LOGGER.info("weixin refund return_code/result_code/return_msg: {}/{}/{}", new Object[] { return_code, result_code, resultMap.get("return_msg") });
 
+            if (SUCCESS.equalsIgnoreCase(return_code) && !SUCCESS.equalsIgnoreCase(result_code)) {
+                LOGGER.error("refund error: {}/{}", resultMap.get("err_code"), resultMap.get("err_code_des"));
+            }
+
             if (successful) {
                 if (!WechatpayUtil.validateSign(resultMap, Platform.WAP)) throw new MomiaErrorException("fail to refund, invalid sign");
             }
@@ -264,9 +269,19 @@ public class WechatpayGateway extends PaymentGateway {
     private Map<String, String> createRefundRequestParams(RefundParam param) {
         Map<String, String> requestParams = new HashMap<String, String>();
 
-        requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
-        requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
-        requestParams.put(RefundRequestField.OP_USER_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
+        switch (param.getPayType()) {
+            case PayType.WEIXIN_APP:
+                requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.AppAppId"));
+                requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.AppMchId"));
+                requestParams.put(RefundRequestField.OP_USER_ID, Configuration.getString("Payment.Wechat.AppMchId"));
+                break;
+            case PayType.WEIXIN_JSAPI:
+                requestParams.put(RefundRequestField.APPID, Configuration.getString("Payment.Wechat.JsApiAppId"));
+                requestParams.put(RefundRequestField.MCH_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
+                requestParams.put(RefundRequestField.OP_USER_ID, Configuration.getString("Payment.Wechat.JsApiMchId"));
+                break;
+            default: throw new MomiaErrorException("无效的支付类型: " + param.getPayType());
+        }
 
         requestParams.put(RefundRequestField.NONCE_STR, WechatpayUtil.createNoncestr(32));
         requestParams.put(RefundRequestField.TRANSACTION_ID, param.getTradeNo());

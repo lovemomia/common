@@ -6,6 +6,7 @@ import java.util.Date;
 public class RefundParam {
     private int platform;
 
+    private int payType;
     private long refundId;
     private Date refundTime;
     private String tradeNo;
@@ -19,6 +20,14 @@ public class RefundParam {
 
     public void setPlatform(int platform) {
         this.platform = platform;
+    }
+
+    public int getPayType() {
+        return payType;
+    }
+
+    public void setPayType(int payType) {
+        this.payType = payType;
     }
 
     public long getRefundId() {
