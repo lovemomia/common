@@ -16,6 +16,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
@@ -23,6 +25,10 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLContext;
+import java.io.File;
+import java.io.FileInputStream;
+import java.security.KeyStore;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -198,7 +204,27 @@ public class WechatpayGateway extends PaymentGateway {
     @Override
     public boolean refund(RefundParam param) {
         try {
-            HttpClient httpClient = HttpClients.createDefault();
+            KeyStore keyStore  = KeyStore.getInstance("PKCS12");
+            FileInputStream instream = new FileInputStream(new File("/data/appdatas/weixin/cert.p12"));
+            try {
+                keyStore.load(instream, Configuration.getString("Payment.Wechat.JsApiMchId").toCharArray());
+            } finally {
+                instream.close();
+            }
+
+            // Trust own CA and all self-signed certs
+            SSLContext sslcontext = SSLContexts.custom()
+                    .loadKeyMaterial(keyStore, Configuration.getString("Payment.Wechat.JsApiMchId").toCharArray())
+                    .build();
+            // Allow TLSv1 protocol only
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                    sslcontext,
+                    new String[] { "TLSv1" },
+                    null,
+                    SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+            HttpClient httpClient = HttpClients.custom()
+                    .setSSLSocketFactory(sslsf)
+                    .build();
             HttpPost request = createRefundRequest(param);
             HttpResponse response = httpClient.execute(request);
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) throw new MomiaErrorException("fail to execute request: " + request);
