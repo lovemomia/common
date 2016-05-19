@@ -244,7 +244,7 @@ public class WechatpayGateway extends PaymentGateway {
             }
 
             if (successful) {
-                if (!WechatpayUtil.validateSign(resultMap, Platform.WAP)) throw new MomiaErrorException("fail to refund, invalid sign");
+                if (!WechatpayUtil.validateSign(resultMap, param.getPayType() == PayType.WEIXIN_JSAPI ? Platform.WAP : Platform.APP)) throw new MomiaErrorException("fail to refund, invalid sign");
             }
 
             return successful;
@@ -309,7 +309,7 @@ public class WechatpayGateway extends PaymentGateway {
 
             boolean successful = return_code != null && return_code.equalsIgnoreCase(SUCCESS) && result_code != null && result_code.equalsIgnoreCase(SUCCESS);
             if (successful) {
-                if (!WechatpayUtil.validateSign(resultMap, Platform.WAP)) throw new MomiaErrorException("fail to refund, invalid sign");
+                if (!WechatpayUtil.validateSign(resultMap, param.getPayType() == PayType.WEIXIN_JSAPI ? Platform.WAP : Platform.APP)) throw new MomiaErrorException("fail to refund, invalid sign");
 
                 String refund_status_0 = resultMap.get("refund_status_0");
                 return refund_status_0 != null && refund_status_0.equalsIgnoreCase(SUCCESS);
