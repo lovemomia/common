@@ -206,7 +206,7 @@ public class WechatpayGateway extends PaymentGateway {
     public boolean refund(RefundParam param) {
         try {
             KeyStore keyStore  = KeyStore.getInstance("PKCS12");
-            FileInputStream instream = new FileInputStream(new File("/data/appdatas/weixin/cert.p12"));
+            FileInputStream instream = new FileInputStream(new File("/data/appdatas/weixin/" + (param.getPayType() == PayType.WEIXIN_JSAPI ? "js_cert.p12" : "app_cert.p12")));
             try {
                 keyStore.load(instream, Configuration.getString("Payment.Wechat.JsApiMchId").toCharArray());
             } finally {
